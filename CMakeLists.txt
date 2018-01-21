@@ -48,6 +48,7 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 find_package(Boost REQUIRED COMPONENTS filesystem)
+find_package(Curses REQUIRED)
 
 message(STATUS "CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS} )
 message(STATUS "BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS} )
@@ -62,5 +63,5 @@ if ( CMAKE_COMPILER_IS_GNUCC )
 endif ( CMAKE_COMPILER_IS_GNUCC )
 
 # link_directories()
-include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
+include_directories(${Boost_INCLUDE_DIRS} ${CURSES_INCLUDE_DIRS})
+target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES} ${CURSES_LIBRARIES})
