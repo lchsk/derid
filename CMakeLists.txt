@@ -31,7 +31,7 @@ message(STATUS "CMAKE_LIBRARY_PATH: " ${CMAKE_LIBRARY_PATH} )
 
 set(EXECUTABLE_NAME "derid")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
   message(STATUS "Setting definition -O0")
@@ -47,7 +47,7 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost REQUIRED COMPONENTS filesystem)
+find_package(Boost REQUIRED COMPONENTS filesystem log)
 find_package(Curses REQUIRED)
 
 message(STATUS "CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS} )
@@ -55,6 +55,9 @@ message(STATUS "BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS} )
 
 add_executable(${EXECUTABLE_NAME}
     src/derid.cpp
+    src/buffer.cpp
+    src/list.cpp
+    src/curses.cpp
 )
 
 if ( CMAKE_COMPILER_IS_GNUCC )
@@ -64,4 +67,4 @@ endif ( CMAKE_COMPILER_IS_GNUCC )
 
 # link_directories()
 include_directories(${Boost_INCLUDE_DIRS} ${CURSES_INCLUDE_DIRS})
-target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES} ${CURSES_LIBRARIES})
+target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES} ${CURSES_LIBRARIES} -lpthread)
