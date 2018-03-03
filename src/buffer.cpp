@@ -39,12 +39,13 @@ void buffer::read_dir(const std::string& dir)
 
         list.clear();
         paths.clear();
+        entries.clear();
 
         this->dir = dir;
 
         for (fs::directory_entry& x : fs::directory_iterator(p)) {
-            list.push_back(x.path().filename().string());
-            paths.push_back(x.path());
+            paths.push_back(x.path()); // remove
+            entries.push_back(derid::buffer_entry(x.path()));
         }
     } catch (const fs::filesystem_error& e) {
         BOOST_LOG_TRIVIAL(debug) << e.what();

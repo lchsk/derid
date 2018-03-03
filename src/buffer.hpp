@@ -9,6 +9,26 @@
 namespace derid {
 namespace fs = boost::filesystem;
 
+    class buffer_entry
+    {
+    public:
+        buffer_entry(const fs::path& path) : path(path) {}
+
+        const std::string get_filename() const {
+            return path.filename().string();
+        }
+
+        const bool is_directory() const {
+            return fs::is_directory(path);
+        }
+
+        const bool is_regular_file() const {
+            return fs::is_regular_file(path);
+        }
+
+        fs::path path;
+    };
+
 class buffer {
   public:
     void read_dir(const std::string& dir);
@@ -27,6 +47,7 @@ class buffer {
 
     std::vector<std::string> list;
     std::vector<fs::path> paths;
+    std::vector<derid::buffer_entry> entries;
 };
 } // namespace derid
 

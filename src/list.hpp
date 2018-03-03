@@ -25,8 +25,6 @@ class list {
 
     derid::buffer b;
 
-    std::vector<std::string> items;
-
     derid::pos pos;
 
     int index;

@@ -14,15 +14,13 @@ list::list(const derid::pos& p, const int items_shown)
 void list::refresh(const std::string& dir)
 {
     b.read_dir(dir);
-    items = b.list;
-
     index = start = 0;
 }
 
 bool list::next()
 {
     // Return true of list needs to be refreshed
-    int size = items.size();
+    int size = b.entries.size();
 
     if (index + start >= size - 1)
         return false;

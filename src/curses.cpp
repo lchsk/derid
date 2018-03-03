@@ -103,15 +103,30 @@ derid::curses& curses::print(const derid::widget::list& l)
     ::move(pos.row, pos.col);
 
     for (int i = l.start; i < l.start + l.items_shown; i++) {
-        if (i >= l.items.size()) {
+        if (i >= l.b.entries.size()) {
             break;
         }
 
+        bool selected = false;
+
         if (l.index == index) {
             attron(COLOR_PAIR(1));
+            selected = true;
         }
 
-        print(l.items[i]).next_line().move();
+        const auto& entry = l.b.entries[i];
+
+        if (entry.is_directory()) {
+            !selected && attron(COLOR_PAIR(6));
+            print(entry.get_filename());
+            !selected && attroff(COLOR_PAIR(6));
+        } else if (entry.is_regular_file()) {
+            !selected && attron(COLOR_PAIR(8));
+            print(entry.get_filename());
+            !selected && attroff(COLOR_PAIR(8));
+        }
+
+        next_line().move();
 
         if (l.index == index) {
             attroff(COLOR_PAIR(1));
