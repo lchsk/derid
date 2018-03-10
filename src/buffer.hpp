@@ -9,6 +9,9 @@
 namespace derid {
 namespace fs = boost::filesystem;
 
+    const std::string exec_shell_cmd(const std::string&);
+    std::vector<std::string> split_on_new_line(const std::string&);
+
     class buffer_entry
     {
     public:
@@ -25,6 +28,18 @@ namespace fs = boost::filesystem;
         const bool is_regular_file() const {
             return fs::is_regular_file(path);
         }
+
+        // std::string get_perms() const {
+            // const fs::file_status status = fs::status(path);
+            // const fs::perms perms = status.permissions();
+
+            // std::string p = "          ";
+
+            // if (p & fs::perms::owner_exe) {
+            // }
+
+            // return p;
+        // }
 
         fs::path path;
     };
