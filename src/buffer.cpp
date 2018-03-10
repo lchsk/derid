@@ -31,19 +31,7 @@ namespace derid {
         std::vector<std::string> lines;
 
         while (std::getline(ss, temp, '\n')) {
-            line = "";
-
-            for (int i = 0; i < temp.length(); i++) {
-                if (temp[i] == ' ') {
-                    line += '_';
-                }
-                else
-                    {
-                        line += temp[i];
-                    }
-            }
-
-            lines.push_back(line);
+            lines.push_back(temp);
         }
 
         return lines;

@@ -42,7 +42,7 @@ curses::~curses()
 
 derid::curses& curses::print(const std::string& str)
 {
-    for (const char ch : str) {
+    for (char ch : str) {
         addch(ch);
     }
 
@@ -103,7 +103,8 @@ derid::curses& curses::print(const derid::widget::list& l)
     ::move(pos.row, pos.col);
 
     for (int i = l.start; i < l.start + l.items_shown; i++) {
-        if (i >= l.b.entries.size()) {
+        // if (i >= l.b.entries.size()) {
+        if (i >= l.b.list.size()) {
             break;
         }
 
@@ -114,23 +115,16 @@ derid::curses& curses::print(const derid::widget::list& l)
             selected = true;
         }
 
-        const auto& entry = l.b.entries[i];
+        // const auto& entry = l.b.entries[i];
+        const std::string entry = l.b.list[i];
 
-        if (entry.is_directory()) {
-            !selected && attron(COLOR_PAIR(6));
-            print(entry.get_filename());
-            !selected && attroff(COLOR_PAIR(6));
-        } else if (entry.is_regular_file()) {
-            !selected && attron(COLOR_PAIR(8));
-            print(entry.get_filename());
-            !selected && attroff(COLOR_PAIR(8));
-        }
-
-        next_line().move();
+        print(entry);
 
         if (l.index == index) {
             attroff(COLOR_PAIR(1));
         }
+
+        next_line().move();
 
         index++;
     }
