@@ -1,12 +1,17 @@
+#define LOGURU_IMPLEMENTATION 1
+#include "include/loguru.hpp"
+
 #include "buffer.hpp"
 #include "curses.hpp"
 #include "label.hpp"
 #include "list.hpp"
 #include "pos.hpp"
 
-int main()
+int main(int argc, char* argv[])
 {
     boost::log::add_file_log("sample.log");
+    loguru::init(argc, argv);
+    loguru::add_file("everything.log", loguru::Append, loguru::Verbosity_MAX);
 
     derid::curses c;
 

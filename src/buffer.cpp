@@ -1,3 +1,11 @@
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/regex.hpp>
+#include <boost/regex.hpp>
+
+#include <iostream>
+
+#include "include/loguru.hpp"
+
 #include "buffer.hpp"
 
 #define USE_LS
@@ -37,6 +45,11 @@ namespace derid {
         return lines;
     }
 
+buffer_entry::buffer_entry(const std::string& raw_line, const std::string& name) : raw_line(raw_line)
+{
+
+}    
+
 bool buffer::is_file(const fs::path& p)
 {
     return fs::exists(p) && fs::is_regular_file(p);
@@ -66,12 +79,39 @@ void buffer::read_dir(const std::string& dir)
 {
 #ifdef USE_LS
     std::stringstream ss;
-    ss << "ls -lh "
+    ss << "ls -lh -D --quoting-style=literal "
        << dir;
 
     const std::string s = derid::exec_shell_cmd(ss.str());
 
-    list = derid::split_on_new_line(s);
+    std::vector<std::string> lines = derid::split_on_new_line(s);
+
+    boost::regex rx_numbers("[0-9]+");
+    std::vector<std::string> tokens;
+
+    for (auto it = lines.rbegin(); it != lines.rend(); it++) {
+        if (boost::algorithm::starts_with(*it, "//DIRED//")) {
+            boost::algorithm::find_all_regex(tokens, *it, rx_numbers);
+            break;
+        }
+    }
+
+    std::vector<std::string> names;
+
+    for (int i = 0; i < tokens.size() - 1; i += 2) {
+        int start = std::stoi(tokens[i]);
+        int len = std::stoi(tokens[i + 1]) - std::stoi(tokens[i]);
+
+        names.push_back(s.substr(start, len));
+    }
+
+    if (names.size() + 3 != lines.size()) {
+        throw std::runtime_error("Unexpected number of names");
+    }
+
+    for (int i = 0; i < names.size(); i++) {
+        entries.push_back(derid::buffer_entry(lines[i + 1], names[i]));
+    }
 
 #else
 

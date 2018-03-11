@@ -67,4 +67,4 @@ endif ( CMAKE_COMPILER_IS_GNUCC )
 
 # link_directories()
 include_directories(${Boost_INCLUDE_DIRS} ${CURSES_INCLUDE_DIRS})
-target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES} ${CURSES_LIBRARIES} -lpthread)
+target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES} ${CURSES_LIBRARIES} -lpthread -ldl)
