@@ -1,5 +1,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/regex.hpp>
+#include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/regex.hpp>
 
 #include <iostream>
@@ -45,7 +47,10 @@ namespace derid {
         return lines;
     }
 
-buffer_entry::buffer_entry(const std::string& raw_line, const std::string& name) : raw_line(raw_line)
+    buffer_entry::buffer_entry(const std::string& raw_line,
+                               const std::string& name,
+                               const std::string& stats_line)
+        : raw_line(raw_line), name(name), stats_line(stats_line)
 {
 
 }    
@@ -97,12 +102,27 @@ void buffer::read_dir(const std::string& dir)
     }
 
     std::vector<std::string> names;
+    std::vector<std::string> stats_lines;
 
     for (int i = 0; i < tokens.size() - 1; i += 2) {
         int start = std::stoi(tokens[i]);
         int len = std::stoi(tokens[i + 1]) - std::stoi(tokens[i]);
 
         names.push_back(s.substr(start, len));
+
+    }
+
+    // for (const auto& name : names) {
+    for (int i = 1; i < lines.size(); i++) {
+
+        const std::string& name = names[i - 1];
+
+        std::string line = lines[i];
+
+        boost::replace_all(line, name, "");
+        boost::trim(line);
+
+        stats_lines.push_back(line);
     }
 
     if (names.size() + 3 != lines.size()) {
@@ -110,7 +130,8 @@ void buffer::read_dir(const std::string& dir)
     }
 
     for (int i = 0; i < names.size(); i++) {
-        entries.push_back(derid::buffer_entry(lines[i + 1], names[i]));
+        entries.push_back(derid::buffer_entry(lines[i + 1], names[i], stats_lines[i]));
+        LOG_F(INFO, "File: %s", names[i].c_str());
     }
 
 #else

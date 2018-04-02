@@ -16,7 +16,7 @@ namespace fs = boost::filesystem;
     {
     public:
         buffer_entry(const fs::path& path) : path(path) {}
-        buffer_entry(const std::string& raw_line, const std::string& name);
+        buffer_entry(const std::string& raw_line, const std::string& name, const std::string& stats_line);
 
         const std::string get_filename() const {
             return path.filename().string();
@@ -43,8 +43,16 @@ namespace fs = boost::filesystem;
         // }
 
         // ls stuff
+        //
+
+        // Raw data, as returned by ls
         const std::string raw_line;
+
+        // Just a name, as provided by ls
         const std::string name;
+
+        // Part of the line without the name
+        const std::string stats_line;
 
         fs::path path;
     };

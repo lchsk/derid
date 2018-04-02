@@ -1,5 +1,7 @@
 #include "curses.hpp"
 
+#include "include/loguru.hpp"
+
 namespace derid {
 curses::curses()
 {
@@ -103,8 +105,8 @@ derid::curses& curses::print(const derid::widget::list& l)
     ::move(pos.row, pos.col);
 
     for (int i = l.start; i < l.start + l.items_shown; i++) {
-        // if (i >= l.b.entries.size()) {
-        if (i >= l.b.list.size()) {
+        if (i >= l.b.entries.size()) {
+        // if (i >= l.b.list.size()) {
             break;
         }
 
@@ -115,10 +117,16 @@ derid::curses& curses::print(const derid::widget::list& l)
             selected = true;
         }
 
-        // const auto& entry = l.b.entries[i];
-        const std::string entry = l.b.list[i];
+        const auto& entry = l.b.entries[i];
+        // const std::string entry = l.b.list[i];
 
-        print(entry);
+        print(entry.stats_line);
+        print("  ");
+
+        !selected && attron(COLOR_PAIR(5));
+        print(entry.name);
+	!selected && attroff(COLOR_PAIR(5));
+
 
         if (l.index == index) {
             attroff(COLOR_PAIR(1));
