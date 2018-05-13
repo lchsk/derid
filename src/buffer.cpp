@@ -14,7 +14,7 @@
 
 namespace derid {
     const std::string exec_shell_cmd(const std::string& cmd) {
-        constexpr int buffer_size = 128;
+        const int buffer_size = 128;
 
         std::array<char, buffer_size> buffer;
 
@@ -77,15 +77,31 @@ std::string buffer::get_absolute(int index)
 
 const fs::path buffer::get_path_by_index(int index)
 {
-    return fs::absolute(paths[index]);
+    // std::cout << entries[index].get_filename();
+    // returnentries[index].;
+
+    // return entries[index].path();
+    // return fs::absolute(paths[index]);
+}
+
+const std::string buffer::get_entry_by_index(int index)
+{
+    return entries[index].name;
 }
 
 void buffer::read_dir(const std::string& dir)
 {
 #ifdef USE_LS
     std::stringstream ss;
-    ss << "ls -lh -D --quoting-style=literal "
+    ss << "ls -lh -D -a --quoting-style=literal "
        << dir;
+
+    list.clear();
+    paths.clear();
+    entries.clear();
+
+    current = dir;
+    current = fs::canonical(current);
 
     const std::string s = derid::exec_shell_cmd(ss.str());
 
@@ -109,12 +125,9 @@ void buffer::read_dir(const std::string& dir)
         int len = std::stoi(tokens[i + 1]) - std::stoi(tokens[i]);
 
         names.push_back(s.substr(start, len));
-
     }
 
-    // for (const auto& name : names) {
-    for (int i = 1; i < lines.size(); i++) {
-
+    for (int i = 1; i < lines.size() - 1; i++) {
         const std::string& name = names[i - 1];
 
         std::string line = lines[i];
@@ -130,8 +143,8 @@ void buffer::read_dir(const std::string& dir)
     }
 
     for (int i = 0; i < names.size(); i++) {
+        paths.push_back(names[i]); // remove
         entries.push_back(derid::buffer_entry(lines[i + 1], names[i], stats_lines[i]));
-        LOG_F(INFO, "File: %s", names[i].c_str());
     }
 
 #else

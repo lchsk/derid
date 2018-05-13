@@ -1,4 +1,7 @@
+#include "include/loguru.hpp"
+
 #include "list.hpp"
+
 
 namespace derid {
 namespace widget {
@@ -66,16 +69,23 @@ bool list::prev()
 
 bool list::enter()
 {
-    const fs::path p = b.get_path_by_index(start + index);
+    const auto p = b.get_entry_by_index(start + index);
 
-    if (b.is_file(p)) {
+    auto np = fs::path(b.current);
+
+    np += "/" + p;
+
+    if (b.is_file(np)) {
         return false;
     }
 
-    refresh(b.get_absolute(p));
+    const auto abs = b.get_absolute(np);
+
+    refresh(abs);
 
     return true;
 }
+
 bool list::jump_back()
 {
     refresh(b.get_absolute(b.current.parent_path()));

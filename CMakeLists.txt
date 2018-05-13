@@ -50,6 +50,10 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED COMPONENTS filesystem log)
 find_package(Curses REQUIRED)
 
+find_package(PkgConfig)
+
+pkg_check_modules(GTEST "gtest")
+
 message(STATUS "CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS} )
 message(STATUS "BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS} )
 
@@ -65,6 +69,22 @@ if ( CMAKE_COMPILER_IS_GNUCC )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-cpp")
 endif ( CMAKE_COMPILER_IS_GNUCC )
 
-# link_directories()
 include_directories(${Boost_INCLUDE_DIRS} ${CURSES_INCLUDE_DIRS})
 target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES} ${CURSES_LIBRARIES} -lpthread -ldl)
+
+# Tests
+
+if (GTEST_FOUND)
+  enable_testing()
+
+  add_executable(test_readdir
+    tests/test_readdir.cpp
+    src/buffer.cpp
+    )
+
+  add_test(NAME test_readdir COMMAND ./test_readdir)
+
+  target_link_libraries(test_readdir ${GTEST_LIBRARIES} ${Boost_LIBRARIES})
+else ()
+  message(WARNING "GTEST not found")
+endif ()

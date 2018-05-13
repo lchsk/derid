@@ -69,6 +69,7 @@ class buffer {
     std::string get_absolute(int index);
 
     const fs::path get_path_by_index(int index);
+    const std::string get_entry_by_index(int index);
 
     std::string dir;
     fs::path current;
