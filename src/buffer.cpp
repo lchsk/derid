@@ -105,15 +105,19 @@ void buffer::read_dir(const std::string& dir)
 
     const std::string s = derid::exec_shell_cmd(ss.str());
 
-    std::vector<std::string> lines = derid::split_on_new_line(s);
+    std::vector<std::string> all_lines = derid::split_on_new_line(s);
 
     boost::regex rx_numbers("[0-9]+");
     std::vector<std::string> tokens;
+    std::vector<std::string> lines;
 
-    for (auto it = lines.rbegin(); it != lines.rend(); it++) {
+    for (auto it = all_lines.cbegin() + 1; it != all_lines.cend(); it++) {
         if (boost::algorithm::starts_with(*it, "//DIRED//")) {
             boost::algorithm::find_all_regex(tokens, *it, rx_numbers);
-            break;
+        } else if (boost::algorithm::starts_with(*it, "//DIRED-OPTIONS//")) {
+            // pass
+        } else {
+            lines.push_back(*it);
         }
     }
 
@@ -127,10 +131,9 @@ void buffer::read_dir(const std::string& dir)
         names.push_back(s.substr(start, len));
     }
 
-    for (int i = 1; i < lines.size() - 1; i++) {
-        const std::string& name = names[i - 1];
-
-        std::string line = lines[i];
+    for (int i = 0; i < lines.size(); i++) {
+        const std::string& name = names[i];
+        std::string& line = lines[i];
 
         boost::replace_all(line, name, "");
         boost::trim(line);
@@ -138,13 +141,13 @@ void buffer::read_dir(const std::string& dir)
         stats_lines.push_back(line);
     }
 
-    if (names.size() + 3 != lines.size()) {
+    if (names.size() != lines.size()) {
         throw std::runtime_error("Unexpected number of names");
     }
 
     for (int i = 0; i < names.size(); i++) {
         paths.push_back(names[i]); // remove
-        entries.push_back(derid::buffer_entry(lines[i + 1], names[i], stats_lines[i]));
+        entries.push_back(derid::buffer_entry(lines[i], names[i], stats_lines[i]));
     }
 
 #else
