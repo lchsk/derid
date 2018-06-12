@@ -2,6 +2,9 @@
 
 #include "gtest/gtest.h"
 
+#define LOGURU_IMPLEMENTATION 1
+#include "../src/include/loguru.hpp"
+
 #include "../src/buffer.hpp"
 
 TEST(Buffer, readdir)

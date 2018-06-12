@@ -84,7 +84,7 @@ if (GTEST_FOUND)
 
   add_test(NAME test_readdir COMMAND ./test_readdir)
 
-  target_link_libraries(test_readdir ${GTEST_LIBRARIES} ${Boost_LIBRARIES})
+  target_link_libraries(test_readdir ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread -ldl)
 else ()
   message(WARNING "GTEST not found")
 endif ()
