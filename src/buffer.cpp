@@ -2,6 +2,7 @@
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
 
 #include <iostream>
@@ -47,13 +48,21 @@ namespace derid {
         return lines;
     }
 
-    buffer_entry::buffer_entry(const std::string& raw_line,
-                               const std::string& name,
-                               const std::string& stats_line)
-        : raw_line(raw_line), name(name), stats_line(stats_line)
-{
+    buffer_entry::buffer_entry(const std::string& name, const std::vector<std::string>& parts)
+        : name(name)
+    {
+        if (parts.size() < min_parts_sz) {
+            return;
+        }
 
-}    
+        perms = parts[to_type<entry_type>(entry_type::perms)];
+        owner = parts[to_type<entry_type>(entry_type::owner)];
+        group = parts[to_type<entry_type>(entry_type::group)];
+        size = parts[to_type<entry_type>(entry_type::size)];
+        month = parts[to_type<entry_type>(entry_type::month)];
+        day = parts[to_type<entry_type>(entry_type::day)];
+        time = parts[to_type<entry_type>(entry_type::time)];
+    }
 
 bool buffer::is_file(const fs::path& p)
 {
@@ -131,23 +140,25 @@ void buffer::read_dir(const std::string& dir)
         names.push_back(s.substr(start, len));
     }
 
+    assert(lines.size() == names.size());
+
     for (int i = 0; i < lines.size(); i++) {
         const std::string& name = names[i];
-        std::string& line = lines[i];
+        std::string line = lines[i];
 
-        boost::replace_all(line, name, "");
+        std::vector<std::string> parts;
+
         boost::trim(line);
+        boost::split(parts, line, boost::is_any_of(" "));
 
-        stats_lines.push_back(line);
-    }
+        auto removed = std::remove_if(parts.begin(), parts.end(), [](const auto& part) {
+                                                       return part.empty();
+                                                   });
 
-    if (names.size() != lines.size()) {
-        throw std::runtime_error("Unexpected number of names");
-    }
+        parts.erase(removed, parts.end());
 
-    for (int i = 0; i < names.size(); i++) {
-        paths.push_back(names[i]); // remove
-        entries.push_back(derid::buffer_entry(lines[i], names[i], stats_lines[i]));
+        derid::buffer_entry entry(name, parts);
+        entries.push_back(entry);
     }
 
 #else

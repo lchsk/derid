@@ -120,12 +120,13 @@ derid::curses& curses::print(const derid::widget::list& l)
         const auto& entry = l.b.entries[i];
         // const std::string entry = l.b.list[i];
 
-        print(entry.stats_line);
-        print("  ");
+        // print(entry.stats_line);
+        // print(entry.perms);
+        print(" ");
 
-        !selected && attron(COLOR_PAIR(5));
+        // !selected && attron(COLOR_PAIR(5));
         print(entry.name);
-	!selected && attroff(COLOR_PAIR(5));
+        // !selected && attroff(COLOR_PAIR(5));
 
 
         if (l.index == index) {

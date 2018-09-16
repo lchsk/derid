@@ -14,9 +14,28 @@ namespace fs = boost::filesystem;
 
     class buffer_entry
     {
+        enum class entry_type : unsigned int {
+                               perms = 0,
+                               owner = 2,
+                               group = 3,
+                               size = 4,
+                               month = 5,
+                               day = 6,
+                               time = 7,
+        };
+
+        const int min_parts_sz = 8;
+
+        template<typename E> constexpr auto to_type(E e)
+        {
+            return static_cast<typename std::underlying_type<E>::type>(e);
+        }
+
     public:
         buffer_entry(const fs::path& path) : path(path) {}
-        buffer_entry(const std::string& raw_line, const std::string& name, const std::string& stats_line);
+        // buffer_entry(const std::string& raw_line, const std::string& name, const std::string& stats_line);
+
+        buffer_entry(const std::string& name, const std::vector<std::string>& parts);
 
         const std::string get_filename() const {
             return path.filename().string();
@@ -46,13 +65,20 @@ namespace fs = boost::filesystem;
         //
 
         // Raw data, as returned by ls
-        const std::string raw_line;
+        // const std::string raw_line;
 
         // Just a name, as provided by ls
         const std::string name;
+        std::string perms;
+        std::string owner;
+        std::string group;
+        std::string size;
+        std::string month;
+        std::string day;
+        std::string time;
 
         // Part of the line without the name
-        const std::string stats_line;
+        // const std::string stats_line;
 
         fs::path path;
     };
