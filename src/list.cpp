@@ -73,7 +73,11 @@ bool list::enter()
 
     auto np = fs::path(b.current);
 
-    np += "/" + p;
+    if (b.current == "/") {
+        np = "/" + p;
+    } else {
+        np += "/" + p;
+    }
 
     if (b.is_file(np)) {
         return false;
