@@ -2,11 +2,10 @@
 
 #include "list.hpp"
 
-
 namespace derid {
 namespace widget {
 
-list::list(const derid::pos& p, const int items_shown)
+list::list(const derid::pos &p, const int items_shown)
     : pos(p), index(0), start(0), items_shown(items_shown),
       half_items_shown(items_shown / 2)
 
@@ -14,14 +13,12 @@ list::list(const derid::pos& p, const int items_shown)
     refresh(b.get_absolute(b.get_current_path()));
 }
 
-void list::refresh(const std::string& dir)
-{
+void list::refresh(const std::string &dir) {
     b.read_dir(dir);
     index = start = 0;
 }
 
-bool list::next()
-{
+bool list::next() {
     // Return true of list needs to be refreshed
     int size = b.entries.size();
     // int size = b.list.size();
@@ -52,8 +49,7 @@ bool list::next()
     return true;
 }
 
-bool list::prev()
-{
+bool list::prev() {
     if (index + start <= 0)
         return false;
 
@@ -67,8 +63,7 @@ bool list::prev()
     return true;
 }
 
-bool list::enter()
-{
+bool list::enter() {
     const auto p = b.get_entry_by_index(start + index);
 
     auto np = fs::path(b.current);
@@ -90,8 +85,7 @@ bool list::enter()
     return true;
 }
 
-bool list::jump_back()
-{
+bool list::jump_back() {
     refresh(b.get_absolute(b.current.parent_path()));
 
     return true;

@@ -3,8 +3,7 @@
 #include "include/loguru.hpp"
 
 namespace derid {
-curses::curses()
-{
+curses::curses() {
     initscr();
     raw();
     noecho();
@@ -35,15 +34,13 @@ curses::curses()
     }
 }
 
-curses::~curses()
-{
+curses::~curses() {
     if (!isendwin()) {
         endwin();
     }
 }
 
-derid::curses& curses::print(const std::string& str)
-{
+derid::curses &curses::print(const std::string &str) {
     for (char ch : str) {
         addch(ch);
     }
@@ -51,39 +48,33 @@ derid::curses& curses::print(const std::string& str)
     return *this;
 }
 
-derid::curses& curses::set_col(const int col)
-{
+derid::curses &curses::set_col(const int col) {
     pos.col = col;
     return *this;
 }
-derid::curses& curses::set_row(const int row)
-{
+derid::curses &curses::set_row(const int row) {
     pos.row = row;
     return *this;
 }
-derid::curses& curses::set_pos(const int row, const int col)
-{
+derid::curses &curses::set_pos(const int row, const int col) {
     set_col(col);
     set_row(row);
 
     return *this;
 }
-derid::curses& curses::move()
-{
+derid::curses &curses::move() {
     ::move(pos.row, pos.col);
 
     return *this;
 }
 
-derid::curses& curses::next_line()
-{
+derid::curses &curses::next_line() {
     pos.row++;
 
     return *this;
 }
 
-derid::curses& curses::print(const derid::widget::label& l)
-{
+derid::curses &curses::print(const derid::widget::label &l) {
     clean_line(l.pos.row);
 
     ::move(l.pos.row, l.pos.col);
@@ -93,8 +84,7 @@ derid::curses& curses::print(const derid::widget::label& l)
     attroff(l.color);
 }
 
-derid::curses& curses::print(const derid::widget::list& l)
-{
+derid::curses &curses::print(const derid::widget::list &l) {
     pos = l.pos;
     int index = 0;
 
@@ -106,7 +96,7 @@ derid::curses& curses::print(const derid::widget::list& l)
 
     for (int i = l.start; i < l.start + l.items_shown; i++) {
         if (i >= l.b.entries.size()) {
-        // if (i >= l.b.list.size()) {
+            // if (i >= l.b.list.size()) {
             break;
         }
 
@@ -117,7 +107,7 @@ derid::curses& curses::print(const derid::widget::list& l)
             selected = true;
         }
 
-        const auto& entry = l.b.entries[i];
+        const auto &entry = l.b.entries[i];
         // const std::string entry = l.b.list[i];
 
         // print(entry.stats_line);
@@ -127,7 +117,6 @@ derid::curses& curses::print(const derid::widget::list& l)
         // !selected && attron(COLOR_PAIR(5));
         print(entry.name);
         // !selected && attroff(COLOR_PAIR(5));
-
 
         if (l.index == index) {
             attroff(COLOR_PAIR(1));
@@ -141,8 +130,7 @@ derid::curses& curses::print(const derid::widget::list& l)
     return *this;
 }
 
-void curses::reset()
-{
+void curses::reset() {
     pos.row = 0;
     pos.col = 0;
     move();
@@ -150,8 +138,7 @@ void curses::reset()
 
 void curses::update_label() { label->text = l->b.current.string(); }
 
-void curses::run()
-{
+void curses::run() {
     update_label();
     print(*l);
     print(*label);
@@ -186,8 +173,7 @@ void curses::run()
     }
 }
 
-void curses::clean_line(int row)
-{
+void curses::clean_line(int row) {
     ::move(row, 0);
     clrtoeol();
 }

@@ -15,17 +15,17 @@ class curses {
 
     ~curses();
 
-    derid::curses& print(const std::string& str);
+    derid::curses &print(const std::string &str);
 
-    derid::curses& set_col(const int col);
-    derid::curses& set_row(const int row);
-    derid::curses& set_pos(const int row, const int col);
-    derid::curses& move();
-    derid::curses& next_line();
+    derid::curses &set_col(const int col);
+    derid::curses &set_row(const int row);
+    derid::curses &set_pos(const int row, const int col);
+    derid::curses &move();
+    derid::curses &next_line();
 
-    derid::curses& print(const derid::widget::label& l);
+    derid::curses &print(const derid::widget::label &l);
 
-    derid::curses& print(const derid::widget::list& l);
+    derid::curses &print(const derid::widget::list &l);
 
     void reset();
 
@@ -34,8 +34,8 @@ class curses {
 
     void run();
 
-    derid::widget::list* l;
-    derid::widget::label* label;
+    derid::widget::list *l;
+    derid::widget::label *label;
 
     derid::pos size;
 

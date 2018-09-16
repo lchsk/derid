@@ -10,10 +10,8 @@ namespace widget {
 class label {
   public:
     label() {}
-    label(const derid::pos& p, const std::string& text)
-        : pos(p), text(text), color(COLOR_PAIR(5))
-    {
-    }
+    label(const derid::pos &p, const std::string &text)
+        : pos(p), text(text), color(COLOR_PAIR(5)) {}
 
     derid::pos pos;
     std::string text;

@@ -8,10 +8,10 @@ namespace derid {
 namespace widget {
 class list {
   public:
-    list(const derid::pos& p, const int items_shown);
+    list(const derid::pos &p, const int items_shown);
 
     // OUT
-    void refresh(const std::string& dir);
+    void refresh(const std::string &dir);
 
     bool next();
 
