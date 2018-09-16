@@ -103,7 +103,9 @@ void buffer::read_dir(const std::string& dir)
 #ifdef USE_LS
     std::stringstream ss;
     ss << "ls -lh -D -a --quoting-style=literal "
-       << dir;
+       << "'"
+       << dir
+       << "'";
 
     list.clear();
     paths.clear();
