@@ -75,6 +75,8 @@ target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES} ${CURSES_LIBRARIES} 
 # Tests
 
 if (GTEST_FOUND)
+  if (BUILD_TESTS)
+    message(STATUS "Building tests")
   enable_testing()
 
   add_executable(test_readdir
@@ -85,6 +87,10 @@ if (GTEST_FOUND)
   add_test(NAME test_readdir COMMAND ./test_readdir)
 
   target_link_libraries(test_readdir ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread -ldl)
+
+  else ()
+  message(STATUS "Not building tests (BUILD_TESTS flag)")
+  endif ()
 else ()
   message(WARNING "GTEST not found")
 endif ()

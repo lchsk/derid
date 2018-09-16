@@ -2,26 +2,30 @@
 
 #include "gtest/gtest.h"
 
-#define LOGURU_IMPLEMENTATION 1
-#include "../src/include/loguru.hpp"
-
 #include "../src/buffer.hpp"
 
 TEST(Buffer, readdir)
 {
-    derid::buffer b;
+    derid::buffer buffer;
 
-    b.read_dir("./tests/test_data");
+    buffer.read_dir("../tests/test_data");
 
-    ASSERT_EQ(b.entries.size(), 6);
+    ASSERT_EQ(buffer.entries.size(), 6);
 
     std::set<std::string> names;
 
-    for (const auto& entry : b.entries) {
+    for (const auto& entry : buffer.entries) {
         names.insert(entry.name);
     }
 
-    ASSERT_EQ(names, std::set<std::string>({".", "..", "file1", "dir1", "dir2", "dir3"}));
+    ASSERT_EQ(names, std::set<std::string>({
+                                            ".",
+                                            "..",
+                                            "test ą 1 2 3",
+                                            "dir 1 Ś ó a",
+                                            "dir2",
+                                            "dir dir 4",
+            }));
 }
 
 int main (int argc, char** argv) {
