@@ -1,11 +1,13 @@
+#include <sstream>
+#include <iomanip>
+#include <iostream>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/regex.hpp>
-
-#include <iostream>
 
 #include "include/loguru.hpp"
 
@@ -93,13 +95,13 @@ const std::string buffer::get_line(int index) const
 
     std::string line = format;
 
-    boost::replace_all(line, "%name", entry.name);
+    boost::replace_all(line, "%name", entry.fmt_name);
     boost::replace_all(line, "%perms", entry.perms);
-    boost::replace_all(line, "%owner", entry.owner);
-    boost::replace_all(line, "%group", entry.group);
-    boost::replace_all(line, "%size", entry.size);
+    boost::replace_all(line, "%owner", entry.fmt_owner);
+    boost::replace_all(line, "%group", entry.fmt_group);
+    boost::replace_all(line, "%size", entry.fmt_size);
     boost::replace_all(line, "%month", entry.month);
-    boost::replace_all(line, "%day", entry.day);
+    boost::replace_all(line, "%day", entry.fmt_day);
     boost::replace_all(line, "%time", entry.time);
 
     return line;
@@ -152,6 +154,11 @@ void buffer::read_dir(const std::string &dir) {
 
     assert(lines.size() == names.size());
 
+    int size_max = 0;
+    int name_max = 0;
+    int owner_max = 0;
+    int group_max = 0;
+
     for (int i = 0; i < lines.size(); i++) {
         const std::string &name = names[i];
         std::string line = lines[i];
@@ -169,6 +176,41 @@ void buffer::read_dir(const std::string &dir) {
 
         derid::buffer_entry entry(name, parts);
         entries.push_back(entry);
+
+        if (entry.size.size() > size_max) {
+            size_max = entry.size.size();
+        }
+
+        if (entry.name.size() > name_max) {
+            name_max = entry.name.size();
+        }
+    }
+
+    for (auto& entry : entries) {
+        std::stringstream ss_size;
+
+        ss_size << std::setw(size_max) << entry.size;
+        entry.fmt_size = ss_size.str();
+
+        std::stringstream ss_name;
+
+        ss_name << std::left << std::setw(name_max) << entry.name;
+        entry.fmt_name = ss_name.str();
+
+        std::stringstream ss_owner;
+
+        ss_owner << std::left << std::setw(owner_max) << entry.owner;
+        entry.fmt_owner = ss_owner.str();
+
+        std::stringstream ss_group;
+
+        ss_group << std::left << std::setw(group_max) << entry.group;
+        entry.fmt_group = ss_group.str();
+
+        std::stringstream ss_day;
+
+        ss_day << std::right << std::setw(2) << entry.day;
+        entry.fmt_day = ss_day.str();
     }
 
 #else

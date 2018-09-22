@@ -62,7 +62,7 @@ class buffer_entry {
     // const std::string raw_line;
 
     // Just a name, as provided by ls
-    const std::string name;
+    std::string name;
     std::string perms;
     std::string owner;
     std::string group;
@@ -70,6 +70,12 @@ class buffer_entry {
     std::string month;
     std::string day;
     std::string time;
+
+    std::string fmt_name;
+    std::string fmt_owner;
+    std::string fmt_group;
+    std::string fmt_size;
+    std::string fmt_day;
 
     // Part of the line without the name
     // const std::string stats_line;
