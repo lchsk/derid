@@ -112,10 +112,10 @@ derid::curses &curses::print(const derid::widget::list &l) {
 
         // print(entry.stats_line);
         // print(entry.perms);
-        print(" ");
+        // print(" ");
 
         // !selected && attron(COLOR_PAIR(5));
-        print(entry.name);
+        print(l.b.get_line(i));
         // !selected && attroff(COLOR_PAIR(5));
 
         if (l.index == index) {

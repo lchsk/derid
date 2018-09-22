@@ -87,6 +87,24 @@ const fs::path buffer::get_path_by_index(int index) {
     // return fs::absolute(paths[index]);
 }
 
+const std::string buffer::get_line(int index) const
+{
+    const auto &entry = entries[index];
+
+    std::string line = format;
+
+    boost::replace_all(line, "%name", entry.name);
+    boost::replace_all(line, "%perms", entry.perms);
+    boost::replace_all(line, "%owner", entry.owner);
+    boost::replace_all(line, "%group", entry.group);
+    boost::replace_all(line, "%size", entry.size);
+    boost::replace_all(line, "%month", entry.month);
+    boost::replace_all(line, "%day", entry.day);
+    boost::replace_all(line, "%time", entry.time);
+
+    return line;
+}
+
 const std::string buffer::get_entry_by_index(int index) {
     return entries[index].name;
 }

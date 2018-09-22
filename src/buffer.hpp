@@ -97,6 +97,10 @@ class buffer {
     std::vector<std::string> list;
     std::vector<fs::path> paths;
     std::vector<derid::buffer_entry> entries;
+
+    const std::string get_line(int index) const;
+private:
+    const std::string format = "%perms %owner %group %size %month %day %time %name";
 };
 } // namespace derid
 
