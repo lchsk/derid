@@ -80,6 +80,8 @@ derid::curses &curses::print(const derid::widget::label &l) {
     attron(l.color);
     print(l.text);
     attroff(l.color);
+
+    return *this;
 }
 
 derid::curses &curses::print(const derid::widget::list &l) {
@@ -92,29 +94,14 @@ derid::curses &curses::print(const derid::widget::list &l) {
 
     ::move(pos.row, pos.col);
 
-    for (int i = l.start; i < l.start + l.items_shown; i++) {
-        if (i >= l.b.entries.size()) {
-            // if (i >= l.b.list.size()) {
-            break;
-        }
+    const int max_index = std::max(l.start + l.items_shown, static_cast<int>(l.b.entries.size()));
 
-        bool selected = false;
-
+    for (int i = l.start; i < max_index; i++) {
         if (l.index == index) {
             attron(COLOR_PAIR(1));
-            selected = true;
         }
 
-        const auto &entry = l.b.entries[i];
-        // const std::string entry = l.b.list[i];
-
-        // print(entry.stats_line);
-        // print(entry.perms);
-        // print(" ");
-
-        // !selected && attron(COLOR_PAIR(5));
         print(l.b.get_line(i));
-        // !selected && attroff(COLOR_PAIR(5));
 
         if (l.index == index) {
             attroff(COLOR_PAIR(1));
