@@ -1,7 +1,5 @@
 #include "curses.hpp"
 
-#include "include/loguru.hpp"
-
 namespace derid {
 curses::curses() {
     initscr();

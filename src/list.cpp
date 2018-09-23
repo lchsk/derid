@@ -1,5 +1,3 @@
-#include "include/loguru.hpp"
-
 #include "list.hpp"
 
 namespace derid {

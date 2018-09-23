@@ -9,8 +9,6 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/regex.hpp>
 
-#include "include/loguru.hpp"
-
 #include "buffer.hpp"
 
 namespace derid {
