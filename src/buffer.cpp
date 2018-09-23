@@ -77,14 +77,6 @@ std::string buffer::get_absolute(int index) {
     return fs::absolute(paths[index]).string();
 }
 
-const fs::path buffer::get_path_by_index(int index) {
-    // std::cout << entries[index].get_filename();
-    // returnentries[index].;
-
-    // return entries[index].path();
-    // return fs::absolute(paths[index]);
-}
-
 const std::string buffer::get_line(int index) const
 {
     const auto &entry = entries[index];
@@ -140,7 +132,7 @@ void buffer::read_dir(const std::string &dir) {
     std::vector<std::string> names;
     std::vector<std::string> stats_lines;
 
-    for (int i = 0; i < tokens.size() - 1; i += 2) {
+    for (std::size_t i = 0; i < tokens.size() - 1; i += 2) {
         int start = std::stoi(tokens[i]);
         int len = std::stoi(tokens[i + 1]) - std::stoi(tokens[i]);
 
@@ -149,12 +141,12 @@ void buffer::read_dir(const std::string &dir) {
 
     assert(lines.size() == names.size());
 
-    int size_max = 0;
-    int name_max = 0;
-    int owner_max = 0;
-    int group_max = 0;
+    std::size_t size_max = 0;
+    std::size_t name_max = 0;
+    std::size_t owner_max = 0;
+    std::size_t group_max = 0;
 
-    for (int i = 0; i < lines.size(); i++) {
+    for (std::size_t i = 0; i < lines.size(); i++) {
         const std::string &name = names[i];
         std::string line = lines[i];
 

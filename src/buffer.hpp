@@ -23,7 +23,7 @@ class buffer_entry {
         time = 7,
     };
 
-    const int min_parts_sz = 8;
+    const std::size_t min_parts_sz = 8;
 
     template <typename E> constexpr auto to_type(E e) {
         return static_cast<typename std::underlying_type<E>::type>(e);
@@ -94,7 +94,6 @@ class buffer {
     std::string get_absolute(const fs::path &p);
     std::string get_absolute(int index);
 
-    const fs::path get_path_by_index(int index);
     const std::string get_entry_by_index(int index);
 
     std::string dir;
