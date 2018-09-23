@@ -13,8 +13,6 @@
 
 #include "buffer.hpp"
 
-#define USE_LS
-
 namespace derid {
 const std::string exec_shell_cmd(const std::string &cmd) {
     const int buffer_size = 128;
@@ -112,7 +110,6 @@ const std::string buffer::get_entry_by_index(int index) {
 }
 
 void buffer::read_dir(const std::string &dir) {
-#ifdef USE_LS
     std::stringstream ss;
     ss << "ls -lh -D -a --quoting-style=literal "
        << "'" << dir << "'";
@@ -212,34 +209,6 @@ void buffer::read_dir(const std::string &dir) {
         ss_day << std::right << std::setw(2) << entry.day;
         entry.fmt_day = ss_day.str();
     }
-
-#else
-
-    BOOST_LOG_TRIVIAL(debug) << dir;
-
-    try {
-        fs::path p(dir);
-        current = p;
-
-        if (!fs::exists(p))
-            return;
-
-        list.clear();
-        paths.clear();
-        entries.clear();
-
-        this->dir = dir;
-
-        for (fs::directory_entry &x : fs::directory_iterator(p)) {
-            paths.push_back(x.path()); // remove
-            entries.push_back(derid::buffer_entry(x.path()));
-        }
-    } catch (const fs::filesystem_error &e) {
-        BOOST_LOG_TRIVIAL(debug) << e.what();
-
-        return;
-    }
-#endif
 }
 
 } // namespace derid
