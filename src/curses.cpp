@@ -94,7 +94,7 @@ derid::curses &curses::print(const derid::widget::list &l) {
 
     ::move(pos.row, pos.col);
 
-    const int max_index = std::max(l.start + l.items_shown, static_cast<int>(l.b.entries.size()));
+    const int max_index = std::min(l.start + l.items_shown, static_cast<int>(l.b.entries.size()));
 
     for (int i = l.start; i < max_index; i++) {
         if (l.index == index) {
