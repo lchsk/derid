@@ -59,6 +59,7 @@ message(STATUS "BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS} )
 
 add_executable(${EXECUTABLE_NAME}
     src/derid.cpp
+    src/pos.cpp
     src/buffer_entry.cpp
     src/buffer.cpp
     src/list.cpp

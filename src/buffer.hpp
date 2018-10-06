@@ -35,7 +35,6 @@ public:
   std::vector<fs::path> paths;
   std::vector<derid::buffer_entry> entries;
 
-
   const std::vector<std::pair<std::string, std::string>>
   get_line_data(int index) const;
 

@@ -9,7 +9,11 @@ curses::curses() {
 
   curs_set(0);
 
-  getmaxyx(stdscr, size.row, size.col);
+  int row, col;
+
+  getmaxyx(stdscr, row, col);
+  size.set_row(row);
+  size.set_col(col);
 
   colors_available = has_colors();
 
@@ -47,11 +51,11 @@ derid::curses &curses::print(const std::string &str) {
 }
 
 derid::curses &curses::set_col(const int col) {
-  pos.col = col;
+  pos.set_col(col);
   return *this;
 }
 derid::curses &curses::set_row(const int row) {
-  pos.row = row;
+  pos.set_row(row);
   return *this;
 }
 derid::curses &curses::set_pos(const int row, const int col) {
@@ -61,25 +65,25 @@ derid::curses &curses::set_pos(const int row, const int col) {
   return *this;
 }
 derid::curses &curses::move() {
-  ::move(pos.row, pos.col);
+  ::move(pos.get_row(), pos.get_col());
 
   return *this;
 }
 
 derid::curses &curses::next_line() {
-  pos.row++;
+  pos.set_row(pos.get_row() + 1);
 
   return *this;
 }
 
-derid::curses &curses::print(const derid::widget::label &l) {
-  clean_line(l.pos.row);
+derid::curses &curses::print(const derid::widget::label &label) {
+  clean_line(label.pos.get_row());
 
-  ::move(l.pos.row, l.pos.col);
+  ::move(label.pos.get_row(), label.pos.get_col());
 
-  attron(l.color);
-  print(l.text);
-  attroff(l.color);
+  attron(label.color);
+  print(label.text);
+  attroff(label.color);
 
   return *this;
 }
@@ -88,11 +92,11 @@ derid::curses &curses::print(const derid::widget::list &l) {
   pos = l.pos;
   int index = 0;
 
-  for (int i = pos.row; i < pos.row + l.items_shown; i++) {
+  for (int i = pos.get_row(); i < pos.get_row() + l.items_shown; i++) {
     clean_line(i);
   }
 
-  ::move(pos.row, pos.col);
+  ::move(pos.get_row(), pos.get_col());
 
   const int max_index =
       std::min(l.start + l.items_shown, static_cast<int>(l.b.entries.size()));
@@ -135,8 +139,8 @@ derid::curses &curses::print(const derid::widget::list &l) {
 }
 
 void curses::reset() {
-  pos.row = 0;
-  pos.col = 0;
+  pos.set_row(0);
+  pos.set_col(0);
   move();
 }
 

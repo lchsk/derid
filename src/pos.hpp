@@ -4,10 +4,18 @@
 namespace derid {
 class pos {
 public:
-  pos(const int row, const int col) : row(row), col(col) {}
-  pos() : pos(0, 0) {}
+  explicit pos(int row, int col);
+  explicit pos();
 
-  int row, col;
+  int get_row() const { return m_row; };
+  int get_col() const { return m_col; };
+
+  int set_row(int row) { m_row = row; }
+
+  int set_col(int col) { m_col = col; }
+
+private:
+  int m_row, m_col;
 };
 
 } // namespace derid

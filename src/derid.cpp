@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
   derid::curses c;
 
   // 4 empty lines under the list
-  derid::widget::list l(derid::pos(1, 0), c.size.row - 5);
+  derid::widget::list l(derid::pos(1, 0), c.size.get_row() - 5);
   derid::widget::label label(derid::pos(0, 0), "");
 
   std::vector<std::string> t;
