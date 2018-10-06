@@ -97,11 +97,28 @@ derid::curses &curses::print(const derid::widget::list &l) {
     const int max_index = std::min(l.start + l.items_shown, static_cast<int>(l.b.entries.size()));
 
     for (int i = l.start; i < max_index; i++) {
+      bool selected = false;
         if (l.index == index) {
             attron(COLOR_PAIR(1));
+            selected = true;
         }
 
-        print(l.b.get_line(i));
+				const auto line_map = l.b.get_line_data(i);
+
+        const auto &entry = l.b.entries[i];
+
+        for (const auto& info_type : line_map) {
+
+          if (!selected and info_type.first == "%name" and entry.m_object_type == buffer_entry::object_type::executable) {
+            attron(COLOR_PAIR(4));
+          }
+          print(info_type.second);
+
+          if (!selected and info_type.first == "%name" and entry.m_object_type == buffer_entry::object_type::executable) {
+            attroff(COLOR_PAIR(4));
+          }
+
+        }
 
         if (l.index == index) {
             attroff(COLOR_PAIR(1));

@@ -1,6 +1,7 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <unordered_map>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -77,6 +78,41 @@ const std::string buffer::get_line(int index) const
     boost::replace_all(line, "%time", entry.time);
 
     return line;
+}
+
+  const std::vector<std::pair<std::string, std::string>> buffer::get_line_data(int index) const
+{
+  std::vector<std::string> parts;
+  parts.reserve(8);
+  boost::split(parts, format, boost::is_any_of(" "));
+
+  const auto &entry = entries[index];
+
+  std::vector<std::pair<std::string, std::string>> line_map;
+  std::unordered_map<std::string, std::string> mapping {
+                                              {"%name", entry.fmt_name},
+                                              {"%perms", entry.perms},
+                                              {"%owner", entry.fmt_owner},
+                                              {"%group", entry.fmt_group},
+                                              {"%size", entry.fmt_size},
+                                              {"%month", entry.month},
+                                              {"%day", entry.fmt_day},
+                                              {"%time", entry.time},
+                                              {"%space", " "},
+  };
+
+  for (const std::string& part : parts) {
+    if (part == "") {
+      line_map.push_back(std::make_pair("%space", mapping["%space"]));
+      continue;
+    }
+
+    line_map.push_back(std::make_pair(part, mapping[part]));
+
+    line_map.push_back(std::make_pair("%space", mapping["%space"]));
+  }
+
+  return line_map;
 }
 
 const std::string buffer::get_entry_by_index(int index) {

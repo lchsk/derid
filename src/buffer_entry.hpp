@@ -17,6 +17,7 @@ class buffer_entry {
         time = 7,
     };
 
+
     const std::size_t min_parts_sz = 8;
 
     template <typename E> constexpr auto to_type(E e) {
@@ -24,6 +25,13 @@ class buffer_entry {
     }
 
   public:
+  enum class object_type {
+                          undefined,
+                          file,
+                          executable,
+                          directory,
+  };
+
     buffer_entry(const fs::path &path) : path(path) {}
     // buffer_entry(const std::string& raw_line, const std::string& name, const
     // std::string& stats_line);
@@ -33,7 +41,10 @@ class buffer_entry {
 
     const std::string get_filename() const { return path.filename().string(); }
 
-    const bool is_directory() const { return fs::is_directory(path); }
+    const bool is_directory() const {
+      return fs::is_directory(path);
+      // return
+    }
 
     const bool is_regular_file() const { return fs::is_regular_file(path); }
 
@@ -54,6 +65,8 @@ class buffer_entry {
 
     // Raw data, as returned by ls
     // const std::string raw_line;
+
+  object_type m_object_type;
 
     // Just a name, as provided by ls
     std::string name;

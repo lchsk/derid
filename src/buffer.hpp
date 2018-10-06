@@ -1,5 +1,7 @@
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
+#include <map>
+#include <iostream>
 
 #include <boost/filesystem.hpp>
 #define BOOST_LOG_DYN_LINK 1
@@ -36,6 +38,7 @@ class buffer {
     std::vector<derid::buffer_entry> entries;
 
     const std::string get_line(int index) const;
+  const std::vector<std::pair<std::string, std::string>> get_line_data(int index) const;
 private:
     const std::string format = "%perms %owner %group %size %month %day %time %name";
 };
