@@ -59,6 +59,7 @@ message(STATUS "BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS} )
 
 add_executable(${EXECUTABLE_NAME}
     src/derid.cpp
+    src/buffer_entry.cpp
     src/buffer.cpp
     src/list.cpp
     src/curses.cpp
@@ -81,6 +82,7 @@ if (GTEST_FOUND)
 
   add_executable(test_readdir
     tests/test_readdir.cpp
+    src/buffer_entry.cpp
     src/buffer.cpp
     )
 
