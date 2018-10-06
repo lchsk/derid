@@ -4,9 +4,6 @@
 #include <map>
 
 #include <boost/filesystem.hpp>
-#define BOOST_LOG_DYN_LINK 1
-#include <boost/log/trivial.hpp>
-#include <boost/log/utility/setup/file.hpp>
 
 #include "buffer_entry.hpp"
 

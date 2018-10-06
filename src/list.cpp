@@ -19,12 +19,10 @@ void list::refresh(const std::string &dir) {
 bool list::next() {
   // Return true of list needs to be refreshed
   int size = b.entries.size();
-  // int size = b.list.size();
 
   if (index + start >= size - 1)
     return false;
 
-  // ???
   index < size - 1 ? index++ : size - 1;
 
   if (index == items_shown) {

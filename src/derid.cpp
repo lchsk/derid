@@ -1,5 +1,3 @@
-#define LOGURU_IMPLEMENTATION 1
-
 #include "buffer.hpp"
 #include "curses.hpp"
 #include "label.hpp"
@@ -7,8 +5,6 @@
 #include "pos.hpp"
 
 int main(int argc, char *argv[]) {
-  boost::log::add_file_log("sample.log");
-
   derid::curses c;
 
   // 4 empty lines under the list
@@ -28,16 +24,8 @@ int main(int argc, char *argv[]) {
     t.push_back(s);
   }
 
-  // l.items = t;
-  // l.items = b.list;
   c.l = &l;
   c.label = &label;
 
-  // c.print(l);
-  // c.print(l);
-
   c.run();
-  // getch();
-
-  // c.~curses();
 }
