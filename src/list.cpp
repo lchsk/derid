@@ -8,85 +8,85 @@ list::list(const derid::pos &p, const int items_shown)
       half_items_shown(items_shown / 2)
 
 {
-    refresh(b.get_absolute(b.get_current_path()));
+  refresh(b.get_absolute(b.get_current_path()));
 }
 
 void list::refresh(const std::string &dir) {
-    b.read_dir(dir);
-    index = start = 0;
+  b.read_dir(dir);
+  index = start = 0;
 }
 
 bool list::next() {
-    // Return true of list needs to be refreshed
-    int size = b.entries.size();
-    // int size = b.list.size();
+  // Return true of list needs to be refreshed
+  int size = b.entries.size();
+  // int size = b.list.size();
 
-    if (index + start >= size - 1)
-        return false;
+  if (index + start >= size - 1)
+    return false;
 
-    // ???
-    index < size - 1 ? index++ : size - 1;
+  // ???
+  index < size - 1 ? index++ : size - 1;
 
-    if (index == items_shown) {
-        start += half_items_shown;
+  if (index == items_shown) {
+    start += half_items_shown;
 
-        int idx = 0;
+    int idx = 0;
 
-        if (size - start >= items_shown) {
-            idx = half_items_shown;
-        } else {
-            const int left_out = (size % items_shown);
+    if (size - start >= items_shown) {
+      idx = half_items_shown;
+    } else {
+      const int left_out = (size % items_shown);
 
-            idx = (size - start) - left_out +
-                  (left_out > half_items_shown ? half_items_shown : 0);
-        }
-
-        index = idx;
+      idx = (size - start) - left_out +
+            (left_out > half_items_shown ? half_items_shown : 0);
     }
 
-    return true;
+    index = idx;
+  }
+
+  return true;
 }
 
 bool list::prev() {
-    if (index + start <= 0)
-        return false;
+  if (index + start <= 0)
+    return false;
 
-    index--;
+  index--;
 
-    if (index == -1 && start >= half_items_shown) {
-        start -= half_items_shown;
-        index = half_items_shown - 1;
-    }
+  if (index == -1 && start >= half_items_shown) {
+    start -= half_items_shown;
+    index = half_items_shown - 1;
+  }
 
-    return true;
+  return true;
 }
 
 bool list::enter() {
-    const auto p = b.get_entry_by_index(start + index);
+  const auto p = b.get_entry_by_index(start + index);
 
-    auto np = fs::path(b.current);
+  auto np = fs::path(b.current);
 
-    if (b.current == "/") {
-        np = "/" + p;
-    } else {
-        np += "/" + p;
-    }
+  if (b.current == "/") {
+    np = "/" + p;
+  } else {
+    np += "/" + p;
+  }
 
-    if (b.is_file(np)) {
-        return false;
-    }
+  if (b.is_file(np)) {
+    return false;
+  }
 
-    const auto abs = b.get_absolute(np);
+  const auto abs = b.get_absolute(np);
 
-    refresh(abs);
+  refresh(abs);
 
-    return true;
+  return true;
 }
 
 bool list::jump_back() {
-    refresh(b.get_absolute(b.current.parent_path()));
+  refresh(b.get_absolute(b.current.parent_path()));
 
-    return true;
+  return true;
 }
 
 } // namespace widget

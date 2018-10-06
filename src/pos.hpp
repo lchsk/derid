@@ -3,11 +3,11 @@
 
 namespace derid {
 class pos {
-  public:
-    pos(const int row, const int col) : row(row), col(col) {}
-    pos() : pos(0, 0) {}
+public:
+  pos(const int row, const int col) : row(row), col(col) {}
+  pos() : pos(0, 0) {}
 
-    int row, col;
+  int row, col;
 };
 
 } // namespace derid
