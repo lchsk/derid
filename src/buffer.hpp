@@ -2,6 +2,8 @@
 #define BUFFER_HPP
 #include <iostream>
 #include <map>
+#include <string>
+#include <vector>
 
 #include <boost/filesystem.hpp>
 
@@ -33,11 +35,12 @@ public:
   std::vector<fs::path> paths;
   std::vector<derid::buffer_entry> entries;
 
-  const std::string get_line(int index) const;
+
   const std::vector<std::pair<std::string, std::string>>
   get_line_data(int index) const;
 
 private:
+  const std::string get_line(int index) const;
   const std::string format =
       "%perms %owner %group %size %month %day %time %name";
 };
