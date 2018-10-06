@@ -25,7 +25,7 @@ public:
 
   derid::buffer b;
 
-  derid::pos pos;
+  const derid::pos pos;
 
   int index;
   int start;

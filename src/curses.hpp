@@ -37,7 +37,11 @@ public:
   derid::pos size;
 
 private:
-  void clean_line(int row);
+  void clean(int row);
+  void clean(const derid::widget::list &);
+
+  template <typename F>
+  bool execute_on_selected_entry(int list_index, int index, F f) const;
 
   bool colors_available;
   derid::pos pos;

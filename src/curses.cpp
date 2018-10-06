@@ -77,7 +77,7 @@ derid::curses &curses::next_line() {
 }
 
 derid::curses &curses::print(const derid::widget::label &label) {
-  clean_line(label.pos.get_row());
+  clean(label.pos.get_row());
 
   ::move(label.pos.get_row(), label.pos.get_col());
 
@@ -88,25 +88,36 @@ derid::curses &curses::print(const derid::widget::label &label) {
   return *this;
 }
 
-derid::curses &curses::print(const derid::widget::list &l) {
-  pos = l.pos;
-  int index = 0;
+void curses::clean(const derid::widget::list &list) {
+  const auto pos = list.pos;
 
-  for (int i = pos.get_row(); i < pos.get_row() + l.items_shown; i++) {
-    clean_line(i);
+  for (int i = pos.get_row(); i < pos.get_row() + list.items_shown; i++) {
+    clean(i);
+  }
+}
+
+template <typename F>
+bool curses::execute_on_selected_entry(int list_index, int index, F f) const {
+  if (list_index == index) {
+    f();
+    return true;
   }
 
-  ::move(pos.get_row(), pos.get_col());
+  return false;
+}
+
+derid::curses &curses::print(const derid::widget::list &l) {
+  pos = l.pos;
+  clean(l);
+
+  ::move(l.pos.get_row(), l.pos.get_col());
 
   const int max_index =
       std::min(l.start + l.items_shown, static_cast<int>(l.b.entries.size()));
 
-  for (int i = l.start; i < max_index; i++) {
-    bool selected = false;
-    if (l.index == index) {
-      attron(COLOR_PAIR(1));
-      selected = true;
-    }
+  for (int i = l.start, index = 0; i < max_index; i++, index++) {
+    bool selected = execute_on_selected_entry(l.index, index,
+                                              [] { attron(COLOR_PAIR(1)); });
 
     const auto line_map = l.b.get_line_data(i);
 
@@ -126,13 +137,9 @@ derid::curses &curses::print(const derid::widget::list &l) {
       }
     }
 
-    if (l.index == index) {
-      attroff(COLOR_PAIR(1));
-    }
-
+    selected = execute_on_selected_entry(l.index, index,
+                                         [] { attroff(COLOR_PAIR(1)); });
     next_line().move();
-
-    index++;
   }
 
   return *this;
@@ -181,7 +188,7 @@ void curses::run() {
   }
 }
 
-void curses::clean_line(int row) {
+void curses::clean(int row) {
   ::move(row, 0);
   clrtoeol();
 }
