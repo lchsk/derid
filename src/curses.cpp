@@ -106,6 +106,13 @@ bool curses::execute_on_selected_entry(int list_index, int index, F f) const {
   return false;
 }
 
+template <typename Condition, typename Executor>
+void curses::execute_on_condition(Condition condition,
+                                  Executor executor) const {
+  if (condition())
+    executor();
+}
+
 derid::curses &curses::print(const derid::widget::list &l) {
   pos = l.pos;
   clean(l);
@@ -124,17 +131,25 @@ derid::curses &curses::print(const derid::widget::list &l) {
     const auto &entry = l.b.entries[i];
 
     for (const auto &info_type : line_map) {
+      execute_on_condition(
+          [&] {
+            return !selected and info_type.first == "%name" and
+                   entry.m_object_type == buffer_entry::object_type::executable;
+          }
 
-      if (!selected and info_type.first == "%name" and
-          entry.m_object_type == buffer_entry::object_type::executable) {
-        attron(COLOR_PAIR(4));
-      }
+          ,
+          [] { attron(COLOR_PAIR(4)); });
+
       print(info_type.second);
 
-      if (!selected and info_type.first == "%name" and
-          entry.m_object_type == buffer_entry::object_type::executable) {
-        attroff(COLOR_PAIR(4));
-      }
+      execute_on_condition(
+          [&] {
+            return !selected and info_type.first == "%name" and
+                   entry.m_object_type == buffer_entry::object_type::executable;
+          }
+
+          ,
+          [] { attroff(COLOR_PAIR(4)); });
     }
 
     selected = execute_on_selected_entry(l.index, index,

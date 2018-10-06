@@ -43,6 +43,9 @@ private:
   template <typename F>
   bool execute_on_selected_entry(int list_index, int index, F f) const;
 
+  template <typename Condition, typename Executor>
+  void execute_on_condition(Condition, Executor) const;
+
   bool colors_available;
   derid::pos pos;
 };
