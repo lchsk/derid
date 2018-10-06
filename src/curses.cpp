@@ -139,6 +139,14 @@ derid::curses &curses::print(const derid::widget::list &l) {
 
           ,
           [] { attron(COLOR_PAIR(4)); });
+      execute_on_condition(
+          [&] {
+            return !selected and info_type.first == "%name" and
+                   entry.m_object_type == buffer_entry::object_type::directory;
+          }
+
+          ,
+          [] { attron(COLOR_PAIR(3)); });
 
       print(info_type.second);
 
@@ -150,6 +158,14 @@ derid::curses &curses::print(const derid::widget::list &l) {
 
           ,
           [] { attroff(COLOR_PAIR(4)); });
+      execute_on_condition(
+          [&] {
+            return !selected and info_type.first == "%name" and
+                   entry.m_object_type == buffer_entry::object_type::directory;
+          }
+
+          ,
+          [] { attroff(COLOR_PAIR(3)); });
     }
 
     selected = execute_on_selected_entry(l.index, index,
