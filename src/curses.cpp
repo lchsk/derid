@@ -200,6 +200,9 @@ void curses::run() {
     } else if (in == 'p') {
       if (l->prev())
         print(*l);
+	} else if (in == 'g') {
+      l->refresh(l->b.get_absolute(l->b.current));
+      print(*l);
     } else if (in == 'e') {
       if (l->enter()) {
         update_label();
