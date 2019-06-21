@@ -7,31 +7,31 @@
 namespace derid {
 namespace widget {
 class list {
-public:
-  list(const derid::pos &p, const int items_shown);
+  public:
+    list(const derid::pos &p, const int items_shown);
 
-  // OUT
-  void refresh(const std::string &dir);
+    // OUT
+    void refresh(const std::string &dir);
 
-  bool next();
+    bool next();
 
-  bool prev();
+    bool prev();
 
-  // OUT OF HERE
-  bool enter();
+    // OUT OF HERE
+    bool enter();
 
-  // OUT OF HERE
-  bool jump_back();
+    // OUT OF HERE
+    bool jump_back();
 
-  derid::buffer b;
+    derid::buffer b;
 
-  const derid::pos pos;
+    const derid::pos pos;
 
-  int index;
-  int start;
+    int index;
+    int start;
 
-  const int items_shown;
-  const int half_items_shown;
+    const int items_shown;
+    const int half_items_shown;
 };
 } // namespace widget
 } // namespace derid
