@@ -41,7 +41,9 @@ public:
 private:
   const std::string get_line(int index) const;
   const std::string format =
-      "%perms %owner %group %size %month %day %time %name";
+      "%perms %owner %group %size %datetime %name";
+
+    const std::string datetime_format = "%Y-%m-%d %H:%M";
 };
 } // namespace derid
 

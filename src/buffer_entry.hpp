@@ -1,6 +1,7 @@
 #ifndef BUFFER_ENTRY_HPP
 #define BUFFER_ENTRY_HPP
 
+#include <iomanip>
 #include <string>
 #include <vector>
 
@@ -11,9 +12,13 @@ class buffer_entry {
     owner = 2,
     group = 3,
     size = 4,
-    month = 5,
-    day = 6,
-    time = 7,
+
+    date = 5,
+    time = 6,
+
+    // month = 5,
+    // day = 6,
+    // time = 7,
   };
 
   const std::size_t min_parts_sz = 8;
@@ -32,6 +37,8 @@ public:
 
   buffer_entry(const std::string &name, const std::vector<std::string> &parts);
 
+    const std::string get_formatted_datetime(const std::string& format) const;
+
   object_type m_object_type;
 
   // Just a name, as provided by ls
@@ -40,15 +47,25 @@ public:
   std::string owner;
   std::string group;
   std::string size;
-  std::string month;
-  std::string day;
-  std::string time;
+    std::string date;
+    std::string time;
+
+    std::tm datetime;
+
+    // Separators on the right hand size
+
+    std::string sep_perms;
+    std::string sep_owner;
+    std::string sep_group;
+    std::string sep_size;
+
+    // Formats
 
   std::string fmt_name;
   std::string fmt_owner;
   std::string fmt_group;
   std::string fmt_size;
-  std::string fmt_day;
+  std::string fmt_datetime;
 };
 }
 

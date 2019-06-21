@@ -72,9 +72,11 @@ const std::string buffer::get_line(int index) const {
   boost::replace_all(line, "%owner", entry.fmt_owner);
   boost::replace_all(line, "%group", entry.fmt_group);
   boost::replace_all(line, "%size", entry.fmt_size);
-  boost::replace_all(line, "%month", entry.month);
-  boost::replace_all(line, "%day", entry.fmt_day);
-  boost::replace_all(line, "%time", entry.time);
+  // boost::replace_all(line, "%year", entry.year);
+  // boost::replace_all(line, "%month", entry.month);
+  // boost::replace_all(line, "%day", entry.fmt_day);
+  boost::replace_all(line, "%datetime", entry.fmt_datetime);
+  // boost::replace_all(line, "%time", entry.time);
 
   return line;
 }
@@ -94,9 +96,7 @@ buffer::get_line_data(int index) const {
       {"%owner", entry.fmt_owner},
       {"%group", entry.fmt_group},
       {"%size", entry.fmt_size},
-      {"%month", entry.month},
-      {"%day", entry.fmt_day},
-      {"%time", entry.time},
+      {"%datetime", entry.get_formatted_datetime(datetime_format)},
       {"%space", " "},
   };
 
@@ -120,7 +120,8 @@ const std::string buffer::get_entry_by_index(int index) {
 
 void buffer::read_dir(const std::string &dir) {
   std::stringstream ss;
-  ss << "ls -lh -D -a --quoting-style=literal "
+  // TODO: apostr
+  ss << "ls -lh -D -a --quoting-style=literal --time-style=long-iso "
      << "'" << dir << "'";
 
   list.clear();
@@ -160,6 +161,7 @@ void buffer::read_dir(const std::string &dir) {
 
   assert(lines.size() == names.size());
 
+  std::size_t date_max = 0;
   std::size_t size_max = 0;
   std::size_t name_max = 0;
   std::size_t owner_max = 0;
@@ -212,11 +214,6 @@ void buffer::read_dir(const std::string &dir) {
 
     ss_group << std::left << std::setw(group_max) << entry.group;
     entry.fmt_group = ss_group.str();
-
-    std::stringstream ss_day;
-
-    ss_day << std::right << std::setw(2) << entry.day;
-    entry.fmt_day = ss_day.str();
   }
 }
 
