@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "label.hpp"
+#include "widgets/label.hpp"
 #include "list.hpp"
 #include "pos.hpp"
 #include "colors.hpp"
@@ -26,7 +26,7 @@ class curses {
     derid::curses &move();
     derid::curses &next_line();
 
-    derid::curses &print(const derid::widget::label &);
+    derid::curses &print(const derid::widget::Label &);
     derid::curses &print(const derid::widget::list &);
     derid::curses &print(const std::string &);
 
@@ -38,8 +38,8 @@ class curses {
     void run();
 
     derid::widget::list *l;
-    derid::widget::label *label;
-    derid::widget::input *input;
+    derid::widget::Label *label;
+    // derid::widget::input *input;
 
     derid::pos size;
 

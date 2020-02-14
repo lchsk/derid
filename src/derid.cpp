@@ -1,6 +1,6 @@
 #include "buffer.hpp"
 #include "curses.hpp"
-#include "label.hpp"
+#include "widgets/label.hpp"
 #include "list.hpp"
 #include "pos.hpp"
 #include "colors.hpp"
@@ -19,13 +19,13 @@ int main(int argc, char *argv[]) {
 
     // 4 empty lines under the list
     widget::list list(pos(1, 0), curses.size.get_row() - 5);
-    widget::label label(pos(0, 0), "");
-    label.color_ = COLOR_PAIR(curses.color_pairs_["current_path"]);
-    widget::input input(pos(0, curses.size.get_row() - 3));
+    widget::Label label(pos(0, 0), "");
+    label.SetColor(COLOR_PAIR(curses.color_pairs_["current_path"]));
+    // widget::input input(pos(0, curses.size.get_row() - 3));
 
     curses.l = &list;
     curses.label = &label;
-    curses.input = &input;
+    // curses.input = &input;
 
     curses.run();
 }

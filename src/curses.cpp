@@ -94,17 +94,17 @@ derid::curses &curses::next_line() {
     return *this;
 }
 
-derid::curses &curses::print(const derid::widget::label &label) {
-    clean(label.pos.get_row());
+derid::curses &curses::print(const derid::widget::Label &label) {
+    clean(label.Position().get_row());
 
-    ::move(label.pos.get_row(), label.pos.get_col());
+    ::move(label.Position().get_row(), label.Position().get_col());
 
-    if (label.color_ != -1) {
-        attron(label.color_);
+    if (label.Color() != -1) {
+        attron(label.Color());
     }
-    print(label.text);
-    if (label.color_ != -1) {
-        attroff(label.color_);
+    print(label.Text());
+    if (label.Color() != -1) {
+        attroff(label.Color());
     }
 
     return *this;
@@ -208,7 +208,7 @@ void curses::reset() {
     move();
 }
 
-void curses::update_label() { label->text = l->b.current.string(); }
+    void curses::update_label() { label->SetText(l->b.current.string()); }
 
 void curses::run() {
     update_label();

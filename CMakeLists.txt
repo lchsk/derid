@@ -61,6 +61,7 @@ add_executable(${EXECUTABLE_NAME}
     src/colors.cpp
     src/derid.cpp
     src/pos.cpp
+    src/widgets/label.cpp
     src/buffer_entry.cpp
     src/buffer.cpp
     src/list.cpp
