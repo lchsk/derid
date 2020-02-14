@@ -26,7 +26,7 @@ class List {
     const Pos& Position() const;
     int Index() const;
     int Start() const;
-    const buffer& Buffer() const;
+    const Buffer& GetBuffer() const;
 
 private:
     const int items_shown_;
@@ -34,7 +34,7 @@ private:
     const Pos pos_;
     int index_;
     int start_;
-    buffer buffer_;
+    Buffer buffer_;
 };
 } // namespace widget
 } // namespace derid

@@ -13,7 +13,7 @@
 #include "buffer.hpp"
 
 namespace derid {
-const std::string exec_shell_cmd(const std::string &cmd) {
+const std::string ExecShellCmd(const std::string &cmd) {
     const int buffer_size = 128;
 
     std::array<char, buffer_size> buffer;
@@ -34,7 +34,7 @@ const std::string exec_shell_cmd(const std::string &cmd) {
     return result;
 }
 
-std::vector<std::string> split_on_new_line(const std::string &text) {
+std::vector<std::string> SplitOnNewLine(const std::string &text) {
     std::stringstream ss(text);
     std::string line, temp;
     std::vector<std::string> lines;
@@ -46,48 +46,48 @@ std::vector<std::string> split_on_new_line(const std::string &text) {
     return lines;
 }
 
-bool buffer::is_file(const fs::path &p) {
+bool Buffer::IsFile(const fs::path &p) {
     return fs::exists(p) && fs::is_regular_file(p);
 }
 
-const fs::path buffer::get_current_path() const {
+const fs::path Buffer::GetCurrentPath() const {
     return boost::filesystem::current_path();
 }
 
-std::string buffer::get_absolute(const fs::path &p) const {
+std::string Buffer::GetAbsolute(const fs::path &p) const {
     return fs::absolute(p).string();
 }
 
-std::string buffer::get_absolute(int index) {
-    return fs::absolute(paths[index]).string();
+std::string Buffer::GetAbsolute(int index) {
+    return fs::absolute(paths_[index]).string();
 }
 
-const std::string buffer::get_line(int index) const {
-    const auto &entry = entries[index];
+// const std::string Buffer::GetLine(int index) const {
+    // const auto &entry = entries_[index];
 
-    std::string line = format;
+    // std::string line = format;
 
-    boost::replace_all(line, "%name", entry.FmtName());
-    boost::replace_all(line, "%perms", entry.Perms());
-    boost::replace_all(line, "%owner", entry.FmtOwner());
-    boost::replace_all(line, "%group", entry.FmtGroup());
-    boost::replace_all(line, "%size", entry.FmtSize());
+    // boost::replace_all(line, "%name", entry.FmtName());
+    // boost::replace_all(line, "%perms", entry.Perms());
+    // boost::replace_all(line, "%owner", entry.FmtOwner());
+    // boost::replace_all(line, "%group", entry.FmtGroup());
+    // boost::replace_all(line, "%size", entry.FmtSize());
     // boost::replace_all(line, "%year", entry.year);
     // boost::replace_all(line, "%month", entry.month);
     // boost::replace_all(line, "%day", entry.fmt_day);
-    boost::replace_all(line, "%datetime", entry.FmtDatetime());
+    // boost::replace_all(line, "%datetime", entry.FmtDatetime());
     // boost::replace_all(line, "%time", entry.time);
 
-    return line;
-}
+    // return line;
+// }
 
 const std::vector<std::pair<std::string, std::string>>
-buffer::get_line_data(int index) const {
+Buffer::GetLineData(int index) const {
     std::vector<std::string> parts;
     parts.reserve(8);
     boost::split(parts, format, boost::is_any_of(" "));
 
-    const auto &entry = entries[index];
+    const auto &entry = entries_[index];
 
     std::vector<std::pair<std::string, std::string>> line_map;
     std::unordered_map<std::string, std::string> mapping{
@@ -114,26 +114,26 @@ buffer::get_line_data(int index) const {
     return line_map;
 }
 
-const std::string buffer::get_entry_by_index(int index) {
-    return entries[index].Name();
+const std::string Buffer::GetEntryByIndex(int index) {
+    return entries_[index].Name();
 }
 
-void buffer::read_dir(const std::string &dir) {
+void Buffer::ReadDir(const std::string &dir) {
     std::stringstream ss;
     // TODO: apostr
     ss << "ls -lh -D -a --quoting-style=literal --time-style=long-iso "
        << "'" << dir << "'";
 
-    list.clear();
-    paths.clear();
-    entries.clear();
+    // list_.clear();
+    paths_.clear();
+    entries_.clear();
 
-    current = dir;
-    current = fs::canonical(current);
+    current_ = dir;
+    current_ = fs::canonical(current_);
 
-    const std::string s = derid::exec_shell_cmd(ss.str());
+    const std::string s = ExecShellCmd(ss.str());
 
-    std::vector<std::string> all_lines = derid::split_on_new_line(s);
+    std::vector<std::string> all_lines = SplitOnNewLine(s);
 
     boost::regex rx_numbers("[0-9]+");
     std::vector<std::string> tokens;
@@ -183,7 +183,7 @@ void buffer::read_dir(const std::string &dir) {
         parts.erase(removed, parts.end());
 
         BufferEntry entry(name, parts);
-        entries.push_back(entry);
+        entries_.push_back(entry);
 
         if (entry.Size().size() > size_max) {
             size_max = entry.Size().size();
@@ -194,7 +194,7 @@ void buffer::read_dir(const std::string &dir) {
         }
     }
 
-    for (auto &entry : entries) {
+    for (auto &entry : entries_) {
         std::stringstream ss_size;
 
         ss_size << std::setw(size_max) << entry.Size();
@@ -216,5 +216,12 @@ void buffer::read_dir(const std::string &dir) {
         entry.SetFmtGroup(ss_group.str());
     }
 }
+    const fs::path& Buffer::Current() const {
+        return current_;
+    }
+
+    const std::vector<BufferEntry>& Buffer::Entries() const {
+        return entries_;
+    }
 
 } // namespace derid

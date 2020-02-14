@@ -12,37 +12,37 @@
 namespace derid {
 namespace fs = boost::filesystem;
 
-const std::string exec_shell_cmd(const std::string &);
-std::vector<std::string> split_on_new_line(const std::string &);
+// TODO: Move somewhere else
+const std::string ExecShellCmd(const std::string &);
+std::vector<std::string> SplitOnNewLine(const std::string &);
 
-class buffer {
+class Buffer {
   public:
-    void read_dir(const std::string &dir);
+    void ReadDir(const std::string &dir);
+    bool IsFile(const fs::path &p);
 
-    bool is_file(const fs::path &p);
+    const fs::path GetCurrentPath() const;
 
-    const fs::path get_current_path() const;
+    std::string GetAbsolute(const fs::path &p) const;
+    std::string GetAbsolute(int index);
 
-    std::string get_absolute(const fs::path &p) const;
-    std::string get_absolute(int index);
-
-    const std::string get_entry_by_index(int index);
-
-    std::string dir;
-    fs::path current;
-
-    std::vector<std::string> list;
-    std::vector<fs::path> paths;
-    std::vector<BufferEntry> entries;
+    const std::string GetEntryByIndex(int index);
 
     const std::vector<std::pair<std::string, std::string>>
-    get_line_data(int index) const;
+    GetLineData(int index) const;
+
+    const fs::path& Current() const;
+    const std::vector<BufferEntry>& Entries() const;
 
   private:
-    const std::string get_line(int index) const;
+    // const std::string GetLine(int index) const;
     const std::string format = "%perms %owner %group %size %datetime %name";
 
     const std::string datetime_format = "%Y-%m-%d %H:%M";
+
+    fs::path current_;
+    std::vector<fs::path> paths_;
+    std::vector<BufferEntry> entries_;
 };
 } // namespace derid
 

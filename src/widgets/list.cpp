@@ -8,17 +8,17 @@ List::List(const Pos &pos, int items_shown)
       half_items_shown_(items_shown / 2)
 
 {
-    Refresh(buffer_.get_absolute(buffer_.get_current_path()));
+    Refresh(buffer_.GetAbsolute(buffer_.GetCurrentPath()));
 }
 
 void List::Refresh(const std::string &dir) {
-    buffer_.read_dir(dir);
+    buffer_.ReadDir(dir);
     index_ = start_ = 0;
 }
 
 bool List::Next() {
     // Return true of list needs to be refreshed
-    int size = buffer_.entries.size();
+    int size = buffer_.Entries().size();
 
     if (index_ + start_ >= size - 1)
         return false;
@@ -60,21 +60,21 @@ bool List::Prev() {
 }
 
 bool List::Enter() {
-    const auto p = buffer_.get_entry_by_index(start_ + index_);
+    const auto p = buffer_.GetEntryByIndex(start_ + index_);
 
-    auto np = fs::path(buffer_.current);
+    auto np = fs::path(buffer_.Current());
 
-    if (buffer_.current == "/") {
+    if (buffer_.Current() == "/") {
         np = "/" + p;
     } else {
         np += "/" + p;
     }
 
-    if (buffer_.is_file(np)) {
+    if (buffer_.IsFile(np)) {
         return false;
     }
 
-    const auto abs = buffer_.get_absolute(np);
+    const auto abs = buffer_.GetAbsolute(np);
 
     Refresh(abs);
 
@@ -82,7 +82,7 @@ bool List::Enter() {
 }
 
 bool List::JumpBack() {
-    Refresh(buffer_.get_absolute(buffer_.current.parent_path()));
+    Refresh(buffer_.GetAbsolute(buffer_.Current().parent_path()));
 
     return true;
 }
@@ -102,7 +102,7 @@ bool List::JumpBack() {
         return start_;
     }
 
-    const buffer& List::Buffer() const {
+    const Buffer& List::GetBuffer() const {
         return buffer_;
     }
 

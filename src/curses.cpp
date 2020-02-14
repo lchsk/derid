@@ -142,15 +142,15 @@ derid::curses &curses::print(const widget::List &l) {
     ::move(pos.row, pos.col);
 
     const int max_index =
-        std::min(l.Start() + l.ItemsShown(), static_cast<int>(l.Buffer().entries.size()));
+        std::min(l.Start() + l.ItemsShown(), static_cast<int>(l.GetBuffer().Entries().size()));
 
     for (int i = l.Start(), index = 0; i < max_index; i++, index++) {
         bool selected = execute_on_selected_entry(
             l.Index(), index, [&] { attron(DERID_COLOR("selected")); });
 
-        const auto line_map = l.Buffer().get_line_data(i);
+        const auto line_map = l.GetBuffer().GetLineData(i);
 
-        const auto &entry = l.Buffer().entries[i];
+        const auto &entry = l.GetBuffer().Entries()[i];
 
         for (const auto &info_type : line_map) {
             execute_on_condition(
@@ -208,7 +208,7 @@ void curses::reset() {
     move();
 }
 
-    void curses::update_label() { label->SetText(l->Buffer().current.string()); }
+    void curses::update_label() { label->SetText(l->GetBuffer().Current().string()); }
 
 void curses::run() {
     update_label();
@@ -227,7 +227,7 @@ void curses::run() {
             if (l->Prev())
                 print(*l);
         } else if (in == 'g') {
-            l->Refresh(l->Buffer().get_absolute(l->Buffer().get_current_path()));
+            l->Refresh(l->GetBuffer().GetAbsolute(l->GetBuffer().GetCurrentPath()));
             print(*l);
         } else if (in == '!') {
 
