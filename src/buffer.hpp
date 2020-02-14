@@ -21,9 +21,9 @@ class buffer {
 
     bool is_file(const fs::path &p);
 
-    const fs::path get_current_path();
+    const fs::path get_current_path() const;
 
-    std::string get_absolute(const fs::path &p);
+    std::string get_absolute(const fs::path &p) const;
     std::string get_absolute(int index);
 
     const std::string get_entry_by_index(int index);

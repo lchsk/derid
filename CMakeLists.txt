@@ -64,7 +64,7 @@ add_executable(${EXECUTABLE_NAME}
     src/widgets/label.cpp
     src/buffer_entry.cpp
     src/buffer.cpp
-    src/list.cpp
+    src/widgets/list.cpp
     src/curses.cpp
 )
 

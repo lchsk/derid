@@ -7,8 +7,6 @@
 
 #include "../pos.hpp"
 
-// using namespace derid;
-
 namespace derid {
 namespace widget {
 class Label {

@@ -1,7 +1,7 @@
 #include "buffer.hpp"
 #include "curses.hpp"
 #include "widgets/label.hpp"
-#include "list.hpp"
+#include "widgets/list.hpp"
 #include "pos.hpp"
 #include "colors.hpp"
 
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     derid::curses curses(color_theme);
 
     // 4 empty lines under the list
-    widget::list list(Pos(1, 0), curses.size.row - 5);
+    widget::List list(Pos(1, 0), curses.size.row - 5);
     widget::Label label(Pos(0, 0), "");
     label.SetColor(COLOR_PAIR(curses.color_pairs_["current_path"]));
     // widget::input input(pos(0, curses.size.get_row() - 3));

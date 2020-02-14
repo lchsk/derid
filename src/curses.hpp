@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 #include "widgets/label.hpp"
-#include "list.hpp"
+#include "widgets/list.hpp"
 #include "pos.hpp"
 #include "colors.hpp"
 
@@ -20,15 +20,15 @@ class curses {
 
 
 
-    derid::curses &set_col(const int col);
-    derid::curses &set_row(const int row);
-    derid::curses &set_pos(const int row, const int col);
-    derid::curses &move();
-    derid::curses &next_line();
+    curses &set_col(const int col);
+    curses &set_row(const int row);
+    curses &set_pos(const int row, const int col);
+    curses &move();
+    curses &next_line();
 
-    derid::curses &print(const derid::widget::Label &);
-    derid::curses &print(const derid::widget::list &);
-    derid::curses &print(const std::string &);
+    curses &print(const widget::Label &);
+    curses &print(const widget::List &);
+    curses &print(const std::string &);
 
     void reset();
 
@@ -37,7 +37,7 @@ class curses {
 
     void run();
 
-    derid::widget::list *l;
+    derid::widget::List *l;
     derid::widget::Label *label;
     // derid::widget::input *input;
 
@@ -48,7 +48,7 @@ class curses {
 
   private:
     void clean(int row);
-    void clean(const derid::widget::list &);
+    void clean(const widget::List &);
 
     void InitTheme();
 

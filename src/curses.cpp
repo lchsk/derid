@@ -94,7 +94,7 @@ derid::curses &curses::next_line() {
     return *this;
 }
 
-derid::curses &curses::print(const derid::widget::Label &label) {
+curses &curses::print(const widget::Label &label) {
     clean(label.Position().row);
 
     ::move(label.Position().row, label.Position().col);
@@ -110,10 +110,10 @@ derid::curses &curses::print(const derid::widget::Label &label) {
     return *this;
 }
 
-void curses::clean(const derid::widget::list &list) {
-    const auto pos = list.pos;
+void curses::clean(const widget::List &list) {
+    const auto& pos = list.Position();
 
-    for (int i = pos.row; i < pos.row + list.items_shown; i++) {
+    for (int i = pos.row; i < pos.row + list.ItemsShown(); i++) {
         clean(i);
     }
 }
@@ -135,22 +135,22 @@ void curses::execute_on_condition(Condition condition,
         executor();
 }
 
-derid::curses &curses::print(const derid::widget::list &l) {
-    pos = l.pos;
+derid::curses &curses::print(const widget::List &l) {
+    pos = l.Position();
     clean(l);
 
-    ::move(l.pos.row, l.pos.col);
+    ::move(pos.row, pos.col);
 
     const int max_index =
-        std::min(l.start + l.items_shown, static_cast<int>(l.b.entries.size()));
+        std::min(l.Start() + l.ItemsShown(), static_cast<int>(l.Buffer().entries.size()));
 
-    for (int i = l.start, index = 0; i < max_index; i++, index++) {
+    for (int i = l.Start(), index = 0; i < max_index; i++, index++) {
         bool selected = execute_on_selected_entry(
-            l.index, index, [&] { attron(DERID_COLOR("selected")); });
+            l.Index(), index, [&] { attron(DERID_COLOR("selected")); });
 
-        const auto line_map = l.b.get_line_data(i);
+        const auto line_map = l.Buffer().get_line_data(i);
 
-        const auto &entry = l.b.entries[i];
+        const auto &entry = l.Buffer().entries[i];
 
         for (const auto &info_type : line_map) {
             execute_on_condition(
@@ -194,7 +194,7 @@ derid::curses &curses::print(const derid::widget::list &l) {
                 [&] { attroff(DERID_COLOR("directory")); });
         }
 
-        selected = execute_on_selected_entry(l.index, index,
+        selected = execute_on_selected_entry(l.Index(), index,
                                              [&] { attroff(DERID_COLOR("selected")); });
         next_line().move();
     }
@@ -208,7 +208,7 @@ void curses::reset() {
     move();
 }
 
-    void curses::update_label() { label->SetText(l->b.current.string()); }
+    void curses::update_label() { label->SetText(l->Buffer().current.string()); }
 
 void curses::run() {
     update_label();
@@ -221,25 +221,25 @@ void curses::run() {
         if (in == 'q') {
             break;
         } else if (in == 'n') {
-            if (l->next())
+            if (l->Next())
                 print(*l);
         } else if (in == 'p') {
-            if (l->prev())
+            if (l->Prev())
                 print(*l);
         } else if (in == 'g') {
-            l->refresh(l->b.get_absolute(l->b.current));
+            l->Refresh(l->Buffer().get_absolute(l->Buffer().get_current_path()));
             print(*l);
         } else if (in == '!') {
 
         } else if (in == 'e') {
-            if (l->enter()) {
+            if (l->Enter()) {
                 update_label();
                 print(*l);
                 print(*label);
             }
 
         } else if (in == 'j') {
-            if (l->jump_back()) {
+            if (l->JumpBack()) {
                 update_label();
                 print(*l);
                 print(*label);

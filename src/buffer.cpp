@@ -50,11 +50,11 @@ bool buffer::is_file(const fs::path &p) {
     return fs::exists(p) && fs::is_regular_file(p);
 }
 
-const fs::path buffer::get_current_path() {
+const fs::path buffer::get_current_path() const {
     return boost::filesystem::current_path();
 }
 
-std::string buffer::get_absolute(const fs::path &p) {
+std::string buffer::get_absolute(const fs::path &p) const {
     return fs::absolute(p).string();
 }
 
