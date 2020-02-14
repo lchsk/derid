@@ -41,7 +41,7 @@ class curses {
     derid::widget::Label *label;
     // derid::widget::input *input;
 
-    derid::pos size;
+    derid::Pos size;
 
     // TODO: Hide this
     std::unordered_map<std::string, int> color_pairs_;
@@ -59,7 +59,7 @@ class curses {
     void execute_on_condition(Condition, Executor) const;
 
     bool colors_available;
-    derid::pos pos;
+    derid::Pos pos;
     const ColorTheme& color_theme_;
 };
 } // namespace derid

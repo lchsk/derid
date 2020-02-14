@@ -3,7 +3,7 @@
 namespace derid {
 namespace widget {
 
-list::list(const derid::pos &p, const int items_shown)
+list::list(const Pos &p, const int items_shown)
     : pos(p), index(0), start(0), items_shown(items_shown),
       half_items_shown(items_shown / 2)
 

@@ -8,7 +8,7 @@ namespace derid {
 namespace widget {
 class list {
   public:
-    list(const derid::pos &p, const int items_shown);
+    list(const derid::Pos &p, const int items_shown);
 
     // OUT
     void refresh(const std::string &dir);
@@ -25,7 +25,7 @@ class list {
 
     derid::buffer b;
 
-    const derid::pos pos;
+    const Pos pos;
 
     int index;
     int start;

@@ -2,10 +2,10 @@
 
 namespace derid {
     namespace widget {
-        Label::Label(const pos &pos, const std::string &text)
+        Label::Label(const Pos &pos, const std::string &text)
         : pos_(pos), text_(text), color_(-1) {}
 
-        const pos& Label::Position() const {
+        const Pos& Label::Position() const {
             return pos_;
         }
 

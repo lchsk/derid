@@ -18,8 +18,8 @@ int main(int argc, char *argv[]) {
     derid::curses curses(color_theme);
 
     // 4 empty lines under the list
-    widget::list list(pos(1, 0), curses.size.get_row() - 5);
-    widget::Label label(pos(0, 0), "");
+    widget::list list(Pos(1, 0), curses.size.row - 5);
+    widget::Label label(Pos(0, 0), "");
     label.SetColor(COLOR_PAIR(curses.color_pairs_["current_path"]));
     // widget::input input(pos(0, curses.size.get_row() - 3));
 

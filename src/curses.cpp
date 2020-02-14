@@ -34,8 +34,8 @@ namespace derid {
     int row, col;
 
     getmaxyx(stdscr, row, col);
-    size.set_row(row);
-    size.set_col(col);
+    size.row = row;
+    size.col = col;
 
     colors_available = has_colors();
 
@@ -69,11 +69,11 @@ derid::curses &curses::print(const std::string &str) {
 }
 
 derid::curses &curses::set_col(const int col) {
-    pos.set_col(col);
+    pos.col = col;
     return *this;
 }
 derid::curses &curses::set_row(const int row) {
-    pos.set_row(row);
+    pos.row = row;
     return *this;
 }
 derid::curses &curses::set_pos(const int row, const int col) {
@@ -83,21 +83,21 @@ derid::curses &curses::set_pos(const int row, const int col) {
     return *this;
 }
 derid::curses &curses::move() {
-    ::move(pos.get_row(), pos.get_col());
+    ::move(pos.row, pos.col);
 
     return *this;
 }
 
 derid::curses &curses::next_line() {
-    pos.set_row(pos.get_row() + 1);
+    pos.row++;
 
     return *this;
 }
 
 derid::curses &curses::print(const derid::widget::Label &label) {
-    clean(label.Position().get_row());
+    clean(label.Position().row);
 
-    ::move(label.Position().get_row(), label.Position().get_col());
+    ::move(label.Position().row, label.Position().col);
 
     if (label.Color() != -1) {
         attron(label.Color());
@@ -113,7 +113,7 @@ derid::curses &curses::print(const derid::widget::Label &label) {
 void curses::clean(const derid::widget::list &list) {
     const auto pos = list.pos;
 
-    for (int i = pos.get_row(); i < pos.get_row() + list.items_shown; i++) {
+    for (int i = pos.row; i < pos.row + list.items_shown; i++) {
         clean(i);
     }
 }
@@ -139,7 +139,7 @@ derid::curses &curses::print(const derid::widget::list &l) {
     pos = l.pos;
     clean(l);
 
-    ::move(l.pos.get_row(), l.pos.get_col());
+    ::move(l.pos.row, l.pos.col);
 
     const int max_index =
         std::min(l.start + l.items_shown, static_cast<int>(l.b.entries.size()));
@@ -203,8 +203,8 @@ derid::curses &curses::print(const derid::widget::list &l) {
 }
 
 void curses::reset() {
-    pos.set_row(0);
-    pos.set_col(0);
+    pos.row = 0;
+    pos.col = 0;
     move();
 }
 

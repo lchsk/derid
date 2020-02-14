@@ -13,16 +13,16 @@ namespace derid {
 namespace widget {
 class Label {
   public:
-    Label(const pos &p, const std::string &text);
+    Label(const Pos &p, const std::string &text);
 
-    const pos& Position() const;
+    const Pos& Position() const;
     const std::string& Text() const;
     void SetText(const std::string&);
     int Color() const;
     void SetColor(int);
 
 private:
-    const pos pos_;
+    const Pos pos_;
     std::string text_;
     int color_;
 };
