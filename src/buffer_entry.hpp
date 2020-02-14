@@ -6,8 +6,40 @@
 #include <vector>
 
 namespace derid {
-class buffer_entry {
-    enum class entry_type : unsigned int {
+class BufferEntry {
+  public:
+    enum class BufferEntryType {
+        undefined,
+        file,
+        executable,
+        directory,
+    };
+
+    BufferEntry(const std::string &name,
+                 const std::vector<std::string> &parts);
+
+    const BufferEntry::BufferEntryType Type() const;
+    const std::string GetFormattedDatetime(const std::string &format) const;
+
+    const std::string& Name() const;
+    const std::string& Size() const;
+    const std::string& Perms() const;
+    const std::string& Owner() const;
+    const std::string& Group() const;
+
+    const std::string& FmtName() const;
+    void SetFmtName(const std::string& name);
+    const std::string& FmtSize() const;
+    void SetFmtSize(const std::string& size);
+    const std::string& FmtOwner() const;
+    void SetFmtOwner(const std::string& owner);
+    const std::string& FmtGroup() const;
+    void SetFmtGroup(const std::string& group);
+
+    const std::string& FmtDatetime() const;
+
+private:
+    enum class InformationType : unsigned int {
         perms = 0,
         owner = 2,
         group = 3,
@@ -15,58 +47,34 @@ class buffer_entry {
 
         date = 5,
         time = 6,
-
-        // month = 5,
-        // day = 6,
-        // time = 7,
     };
 
-    const std::size_t min_parts_sz = 8;
+    const std::size_t min_parts_sz_ = 8;
+    BufferEntryType buffer_entry_type_;
 
-    template <typename E> constexpr auto to_type(E e) {
+    template <typename E> constexpr auto ToType(E e) {
         return static_cast<typename std::underlying_type<E>::type>(e);
     }
 
-  public:
-    enum class object_type {
-        undefined,
-        file,
-        executable,
-        directory,
-    };
-
-    buffer_entry(const std::string &name,
-                 const std::vector<std::string> &parts);
-
-    const std::string get_formatted_datetime(const std::string &format) const;
-
-    object_type m_object_type;
-
     // Just a name, as provided by ls
-    std::string name;
-    std::string perms;
-    std::string owner;
-    std::string group;
-    std::string size;
-    std::string date;
-    std::string time;
+    std::string name_;
 
-    std::tm datetime;
+    std::string perms_;
+    std::string owner_;
+    std::string group_;
+    std::string size_;
+    std::string date_;
+    std::string time_;
 
-    // Separators on the right hand size
-
-    std::string sep_perms;
-    std::string sep_owner;
-    std::string sep_group;
-    std::string sep_size;
+    std::tm datetime_;
 
     // Formats
+    std::string fmt_name_;
+    std::string fmt_owner_;
+    std::string fmt_group_;
+    std::string fmt_size_;
+    std::string fmt_datetime_;
 
-    std::string fmt_name;
-    std::string fmt_owner;
-    std::string fmt_group;
-    std::string fmt_size;
-    std::string fmt_datetime;
 };
 } // namespace derid
 

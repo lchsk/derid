@@ -67,15 +67,15 @@ const std::string buffer::get_line(int index) const {
 
     std::string line = format;
 
-    boost::replace_all(line, "%name", entry.fmt_name);
-    boost::replace_all(line, "%perms", entry.perms);
-    boost::replace_all(line, "%owner", entry.fmt_owner);
-    boost::replace_all(line, "%group", entry.fmt_group);
-    boost::replace_all(line, "%size", entry.fmt_size);
+    boost::replace_all(line, "%name", entry.FmtName());
+    boost::replace_all(line, "%perms", entry.Perms());
+    boost::replace_all(line, "%owner", entry.FmtOwner());
+    boost::replace_all(line, "%group", entry.FmtGroup());
+    boost::replace_all(line, "%size", entry.FmtSize());
     // boost::replace_all(line, "%year", entry.year);
     // boost::replace_all(line, "%month", entry.month);
     // boost::replace_all(line, "%day", entry.fmt_day);
-    boost::replace_all(line, "%datetime", entry.fmt_datetime);
+    boost::replace_all(line, "%datetime", entry.FmtDatetime());
     // boost::replace_all(line, "%time", entry.time);
 
     return line;
@@ -91,12 +91,12 @@ buffer::get_line_data(int index) const {
 
     std::vector<std::pair<std::string, std::string>> line_map;
     std::unordered_map<std::string, std::string> mapping{
-        {"%name", entry.fmt_name},
-        {"%perms", entry.perms},
-        {"%owner", entry.fmt_owner},
-        {"%group", entry.fmt_group},
-        {"%size", entry.fmt_size},
-        {"%datetime", entry.get_formatted_datetime(datetime_format)},
+        {"%name", entry.FmtName()},
+        {"%perms", entry.Perms()},
+        {"%owner", entry.FmtOwner()},
+        {"%group", entry.FmtGroup()},
+        {"%size", entry.FmtSize()},
+        {"%datetime", entry.GetFormattedDatetime(datetime_format)},
         {"%space", " "},
     };
 
@@ -115,7 +115,7 @@ buffer::get_line_data(int index) const {
 }
 
 const std::string buffer::get_entry_by_index(int index) {
-    return entries[index].name;
+    return entries[index].Name();
 }
 
 void buffer::read_dir(const std::string &dir) {
@@ -182,38 +182,38 @@ void buffer::read_dir(const std::string &dir) {
 
         parts.erase(removed, parts.end());
 
-        derid::buffer_entry entry(name, parts);
+        BufferEntry entry(name, parts);
         entries.push_back(entry);
 
-        if (entry.size.size() > size_max) {
-            size_max = entry.size.size();
+        if (entry.Size().size() > size_max) {
+            size_max = entry.Size().size();
         }
 
-        if (entry.name.size() > name_max) {
-            name_max = entry.name.size();
+        if (entry.Name().size() > name_max) {
+            name_max = entry.Name().size();
         }
     }
 
     for (auto &entry : entries) {
         std::stringstream ss_size;
 
-        ss_size << std::setw(size_max) << entry.size;
-        entry.fmt_size = ss_size.str();
+        ss_size << std::setw(size_max) << entry.Size();
+        entry.SetFmtSize(ss_size.str());
 
         std::stringstream ss_name;
 
-        ss_name << std::left << std::setw(name_max) << entry.name;
-        entry.fmt_name = ss_name.str();
+        ss_name << std::left << std::setw(name_max) << entry.Name();
+        entry.SetFmtName(ss_name.str());
 
         std::stringstream ss_owner;
 
-        ss_owner << std::left << std::setw(owner_max) << entry.owner;
-        entry.fmt_owner = ss_owner.str();
+        ss_owner << std::left << std::setw(owner_max) << entry.Owner();
+        entry.SetFmtOwner(ss_owner.str());
 
         std::stringstream ss_group;
 
-        ss_group << std::left << std::setw(group_max) << entry.group;
-        entry.fmt_group = ss_group.str();
+        ss_group << std::left << std::setw(group_max) << entry.Group();
+        entry.SetFmtGroup(ss_group.str());
     }
 }
 

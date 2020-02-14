@@ -4,54 +4,109 @@
 
 namespace derid {
 
-buffer_entry::buffer_entry(const std::string &name,
+BufferEntry::BufferEntry(const std::string &name,
                            const std::vector<std::string> &parts)
-    : name(name) {
-    if (parts.size() < min_parts_sz) {
+    : name_(name) {
+    if (parts.size() < min_parts_sz_) {
         return;
     }
 
-    perms = parts[to_type<entry_type>(entry_type::perms)];
-    owner = parts[to_type<entry_type>(entry_type::owner)];
-    group = parts[to_type<entry_type>(entry_type::group)];
-    size = parts[to_type<entry_type>(entry_type::size)];
-    date = parts[to_type<entry_type>(entry_type::date)];
-    // month = parts[to_type<entry_type>(entry_type::month)];
-    // day = parts[to_type<entry_type>(entry_type::day)];
-    time = parts[to_type<entry_type>(entry_type::time)];
+    perms_ = parts[ToType<InformationType>(InformationType::perms)];
+    owner_ = parts[ToType<InformationType>(InformationType::owner)];
+    group_ = parts[ToType<InformationType>(InformationType::group)];
+    size_ = parts[ToType<InformationType>(InformationType::size)];
+    date_ = parts[ToType<InformationType>(InformationType::date)];
+    time_ = parts[ToType<InformationType>(InformationType::time)];
 
-    std::istringstream ss(date + " " + time);
+    std::istringstream ss(date_ + " " + time_);
 
-    ss >> std::get_time(&datetime, "%Y-%m-%d %H:%M");
+    ss >> std::get_time(&datetime_, "%Y-%m-%d %H:%M");
 
     if (!ss.fail()) {
         // std::cout << std::put_time(&datetime, "%c") << '\n';
     }
 
-    if (perms.size() == 10) {
-        switch (perms[0]) {
+    if (perms_.size() == 10) {
+        switch (perms_[0]) {
         case 'd':
-            m_object_type = object_type::directory;
+            buffer_entry_type_ = BufferEntryType::directory;
             break;
         case '-':
-            if (perms[3] == 'x' or perms[6] == 'x' or perms[9] == 'x') {
-                m_object_type = object_type::executable;
+            if (perms_[3] == 'x' or perms_[6] == 'x' or perms_[9] == 'x') {
+                buffer_entry_type_ = BufferEntryType::executable;
             } else {
-                m_object_type = object_type::file;
+                buffer_entry_type_ = BufferEntryType::file;
             }
             break;
         }
     } else {
-        m_object_type = object_type::undefined;
+        buffer_entry_type_ = BufferEntryType::undefined;
     }
 }
 
 const std::string
-buffer_entry::get_formatted_datetime(const std::string &format) const {
+BufferEntry::GetFormattedDatetime(const std::string &format) const {
     std::stringstream out;
 
-    out << std::put_time(&datetime, format.c_str());
+    out << std::put_time(&datetime_, format.c_str());
 
     return out.str();
 }
+
+    const BufferEntry::BufferEntryType BufferEntry::Type() const {
+        return buffer_entry_type_;
+    }
+
+    const std::string& BufferEntry::Name() const {
+        return name_;
+    }
+    const std::string& BufferEntry::Size() const {
+        return size_;
+    }
+    const std::string& BufferEntry::Perms() const {
+        return perms_;
+    }
+    const std::string& BufferEntry::Owner() const {
+        return owner_;
+    }
+    const std::string& BufferEntry::Group() const {
+        return group_;
+    }
+
+    const std::string& BufferEntry::FmtName() const {
+        return fmt_name_;
+    }
+
+    void BufferEntry::SetFmtName(const std::string& name) {
+        fmt_name_ = name;
+    }
+
+    const std::string& BufferEntry::FmtSize() const {
+        return fmt_size_;
+    }
+
+    void BufferEntry::SetFmtSize(const std::string& size) {
+        fmt_size_ = size;
+    }
+
+    const std::string& BufferEntry::FmtOwner() const {
+        return fmt_owner_;
+    }
+
+    void BufferEntry::SetFmtOwner(const std::string& owner) {
+        fmt_owner_ = owner;
+    }
+
+    const std::string& BufferEntry::FmtGroup() const {
+        return fmt_group_;
+    }
+
+    void BufferEntry::SetFmtGroup(const std::string& group) {
+        fmt_group_ = group;
+    }
+
+    const std::string& BufferEntry::FmtDatetime() const {
+        return fmt_datetime_;
+    }
+
 } // namespace derid

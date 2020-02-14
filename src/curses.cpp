@@ -156,8 +156,8 @@ derid::curses &curses::print(const widget::List &l) {
             execute_on_condition(
                 [&] {
                     return !selected and info_type.first == "%name" and
-                           entry.m_object_type ==
-                               buffer_entry::object_type::executable;
+                        entry.Type() ==
+                        BufferEntry::BufferEntryType::executable;
                 }
 
                 ,
@@ -165,8 +165,8 @@ derid::curses &curses::print(const widget::List &l) {
             execute_on_condition(
                 [&] {
                     return !selected and info_type.first == "%name" and
-                           entry.m_object_type ==
-                               buffer_entry::object_type::directory;
+                        entry.Type() ==
+                        BufferEntry::BufferEntryType::directory;
                 }
 
                 ,
@@ -177,8 +177,8 @@ derid::curses &curses::print(const widget::List &l) {
             execute_on_condition(
                 [&] {
                     return !selected and info_type.first == "%name" and
-                           entry.m_object_type ==
-                               buffer_entry::object_type::executable;
+                        entry.Type() ==
+                        BufferEntry::BufferEntryType::executable;
                 }
 
                 ,
@@ -186,8 +186,8 @@ derid::curses &curses::print(const widget::List &l) {
             execute_on_condition(
                 [&] {
                     return !selected and info_type.first == "%name" and
-                           entry.m_object_type ==
-                               buffer_entry::object_type::directory;
+                        entry.Type() ==
+                        BufferEntry::BufferEntryType::directory;
                 }
 
                 ,
