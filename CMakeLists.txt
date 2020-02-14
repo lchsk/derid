@@ -58,6 +58,7 @@ message(STATUS "CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS} )
 message(STATUS "BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS} )
 
 add_executable(${EXECUTABLE_NAME}
+    src/colors.cpp
     src/derid.cpp
     src/pos.cpp
     src/buffer_entry.cpp
@@ -77,19 +78,26 @@ target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES} ${CURSES_LIBRARIES} 
 # Tests
 
 if (GTEST_FOUND)
-  if (BUILD_TESTS)
+  if (BUILD_TESTS OR CMAKE_BUILD_TYPE STREQUAL Debug)
     message(STATUS "Building tests")
   enable_testing()
 
+  # test_readdir
   add_executable(test_readdir
     tests/test_readdir.cpp
     src/buffer_entry.cpp
     src/buffer.cpp
     )
-
   add_test(NAME test_readdir COMMAND ./test_readdir)
-
   target_link_libraries(test_readdir ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread -ldl)
+
+  # test_colors
+  add_executable(test_colors
+    tests/test_colors.cpp
+    src/colors.cpp
+    )
+  add_test(NAME test_colors COMMAND ./test_colors)
+  target_link_libraries(test_colors ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread -ldl)
 
   else ()
   message(STATUS "Not building tests (BUILD_TESTS flag)")

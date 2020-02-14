@@ -1,7 +1,29 @@
 #include "curses.hpp"
 
+
 namespace derid {
-curses::curses() {
+    void curses::InitTheme() {
+        int color_id = 9;
+        int color_pair_id = 1;
+
+        for (const ColorPair& color_pair: color_theme_.GetColors()) {
+            init_color(color_id, color_pair.fg_.r, color_pair.fg_.g, color_pair.fg_.b);
+            color_id++;
+            init_color(color_id, color_pair.bg_.r, color_pair.bg_.g, color_pair.bg_.b);
+            color_id++;
+
+            init_pair(color_pair_id, color_id - 2, color_id - 1);
+            color_pairs_[color_pair.name_] = color_pair_id;
+
+            color_pair_id++;
+        }
+
+        wbkgd(stdscr, DERID_COLOR("background"));
+    }
+
+    curses::curses(const ColorTheme& color_theme) :
+        color_theme_(color_theme)
+    {
     initscr();
     raw();
     noecho();
@@ -20,11 +42,7 @@ curses::curses() {
     if (colors_available) {
         start_color();
 
-        for (int f = 0; f < COLORS; f++) {
-            for (int b = 0; b < COLORS; b++) {
-                init_pair(f * COLORS + b, f, b);
-            }
-        }
+        InitTheme();
 
         if (can_change_color()) {
             // init_color(XS_COL_SEL, col_sel.r, col_sel.g, col_sel.b);
@@ -81,9 +99,13 @@ derid::curses &curses::print(const derid::widget::label &label) {
 
     ::move(label.pos.get_row(), label.pos.get_col());
 
-    attron(label.color);
+    if (label.color_ != -1) {
+        attron(label.color_);
+    }
     print(label.text);
-    attroff(label.color);
+    if (label.color_ != -1) {
+        attroff(label.color_);
+    }
 
     return *this;
 }
@@ -124,7 +146,7 @@ derid::curses &curses::print(const derid::widget::list &l) {
 
     for (int i = l.start, index = 0; i < max_index; i++, index++) {
         bool selected = execute_on_selected_entry(
-            l.index, index, [] { attron(COLOR_PAIR(1)); });
+            l.index, index, [&] { attron(DERID_COLOR("selected")); });
 
         const auto line_map = l.b.get_line_data(i);
 
@@ -139,7 +161,7 @@ derid::curses &curses::print(const derid::widget::list &l) {
                 }
 
                 ,
-                [] { attron(COLOR_PAIR(4)); });
+                [&] { attron(DERID_COLOR("executable")); });
             execute_on_condition(
                 [&] {
                     return !selected and info_type.first == "%name" and
@@ -148,7 +170,7 @@ derid::curses &curses::print(const derid::widget::list &l) {
                 }
 
                 ,
-                [] { attron(COLOR_PAIR(3)); });
+                [&] { attron(DERID_COLOR("directory")); });
 
             print(info_type.second);
 
@@ -160,7 +182,7 @@ derid::curses &curses::print(const derid::widget::list &l) {
                 }
 
                 ,
-                [] { attroff(COLOR_PAIR(4)); });
+                [&] { attroff(DERID_COLOR("executable")); });
             execute_on_condition(
                 [&] {
                     return !selected and info_type.first == "%name" and
@@ -169,11 +191,11 @@ derid::curses &curses::print(const derid::widget::list &l) {
                 }
 
                 ,
-                [] { attroff(COLOR_PAIR(3)); });
+                [&] { attroff(DERID_COLOR("directory")); });
         }
 
         selected = execute_on_selected_entry(l.index, index,
-                                             [] { attroff(COLOR_PAIR(1)); });
+                                             [&] { attroff(DERID_COLOR("selected")); });
         next_line().move();
     }
 
@@ -207,6 +229,8 @@ void curses::run() {
         } else if (in == 'g') {
             l->refresh(l->b.get_absolute(l->b.current));
             print(*l);
+        } else if (in == '!') {
+
         } else if (in == 'e') {
             if (l->enter()) {
                 update_label();
