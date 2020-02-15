@@ -83,7 +83,7 @@ Curses &Curses::SetPos(const int row, const int col) {
     return *this;
 }
 Curses &Curses::Move() {
-    ::move(pos_.row, pos_.col);
+    move(pos_.row, pos_.col);
 
     return *this;
 }
@@ -97,7 +97,7 @@ Curses &Curses::NextLine() {
 Curses &Curses::Print(const widget::Label &label) {
     Clean(label.Position().row);
 
-    ::move(label.Position().row, label.Position().col);
+    move(label.Position().row, label.Position().col);
 
     if (label.Color() != -1) {
         attron(label.Color());
@@ -139,7 +139,7 @@ Curses &Curses::Print(const widget::List &list) {
     pos_ = list.Position();
     Clean(list);
 
-    ::move(pos_.row, pos_.col);
+    move(pos_.row, pos_.col);
 
     const int max_index =
         std::min(list.Start() + list.ItemsShown(), static_cast<int>(list.GetBuffer().Entries().size()));
@@ -251,7 +251,7 @@ void Curses::Run() {
 }
 
 void Curses::Clean(int row) {
-    ::move(row, 0);
+    move(row, 0);
     clrtoeol();
 }
 
