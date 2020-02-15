@@ -4,16 +4,16 @@
 #include "widgets/list.hpp"
 #include "pos.hpp"
 #include "colors.hpp"
+#include "config.hpp"
 
 using namespace derid;
 
 int main(int argc, char *argv[]) {
+    Config config;
+    config.Read();
+
     ColorTheme color_theme;
-    color_theme.selected = ColorPair("selected", "ffffff", "3f88c5");
-    color_theme.executable = ColorPair("executable", "e3655b", "000000");
-    color_theme.directory = ColorPair("directory", "ffba08", "000000");
-    color_theme.background = ColorPair("background", "ffffff", "000000");
-    color_theme.current_path = ColorPair("current_path", "cbff8c", "000000");
+    color_theme.ReadFromConfig(config);
 
     Curses curses(color_theme);
 

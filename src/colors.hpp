@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "config.hpp"
+
 namespace derid {
 
 // Each value is in the range of 0-1000
@@ -35,9 +37,8 @@ struct CursesColor {
         ColorPair background;
         ColorPair current_path;
 
-        const std::vector<ColorPair> GetColors() const {
-            return {selected, executable, directory, background, current_path};
-        }
+        void ReadFromConfig(const Config&);
+        const std::vector<ColorPair> GetColors() const;
     };
 
     CursesColor HexColorToCursesColor(std::string hex_color);

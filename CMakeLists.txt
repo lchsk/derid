@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
@@ -57,7 +57,10 @@ pkg_check_modules(GTEST "gtest")
 message(STATUS "CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS} )
 message(STATUS "BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS} )
 
+set(EXTERNAL_LIB_HEADERS lib/toml11)
+
 add_executable(${EXECUTABLE_NAME}
+    src/config.cpp
     src/colors.cpp
     src/derid.cpp
     src/pos.cpp
@@ -73,8 +76,18 @@ if ( CMAKE_COMPILER_IS_GNUCC )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-cpp")
 endif ( CMAKE_COMPILER_IS_GNUCC )
 
-include_directories(${Boost_INCLUDE_DIRS} ${CURSES_INCLUDE_DIRS})
-target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES} ${CURSES_LIBRARIES} -lpthread -ldl)
+target_include_directories(
+  ${EXECUTABLE_NAME} PRIVATE
+  ${Boost_INCLUDE_DIRS}
+  ${CURSES_INCLUDE_DIRS}
+  ${EXTERNAL_LIB_HEADERS}
+  )
+target_link_libraries(
+  ${EXECUTABLE_NAME}
+  ${Boost_LIBRARIES}
+  ${CURSES_LIBRARIES}
+  -lpthread -ldl
+  )
 
 # Tests
 
