@@ -113,6 +113,15 @@ if (GTEST_FOUND)
   add_test(NAME test_colors COMMAND ./test_colors)
   target_link_libraries(test_colors ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread -ldl)
 
+  # test_config
+  add_executable(test_config
+    tests/test_config.cpp
+    src/config.cpp
+    )
+  add_test(NAME test_config COMMAND ./test_config)
+  target_include_directories(test_config PRIVATE ${EXTERNAL_LIB_HEADERS})
+  target_link_libraries(test_config ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread -ldl)
+
   else ()
   message(STATUS "Not building tests (BUILD_TESTS flag)")
   endif ()

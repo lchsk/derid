@@ -3,12 +3,27 @@
 #include "config.hpp"
 
 namespace derid {
+    Config::Config() :
+        theme_filename_("theme.toml"),
+        settings_filename_("settings.toml")
+    {
+        HandleDefaultConfigDir();
+    }
+
+    void Config::SetConfigDir(const std::string& dir) {
+        config_dir_ = dir;
+    }
+
+    void Config :: SetThemeFilename(const std::string& filename) {
+        theme_filename_ = filename;
+    }
+
     void Config::Read() {
 
         toml::value data;
 
         try {
-            data = toml::parse("theme.toml");
+            data = toml::parse(config_dir_ + theme_filename_);
 
             try {
                 ParseTheme(data);
@@ -49,5 +64,9 @@ namespace derid {
         theme_config_.current_path_bg = toml::find<std::string>(colors, "current_path_bg");
 
 
+    }
+
+    void Config::HandleDefaultConfigDir() {
+        // TODO: Implement
     }
 } // namespace derid

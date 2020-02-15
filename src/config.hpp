@@ -30,13 +30,21 @@ namespace derid {
 
 class Config {
 public:
+    Config();
     void Read();
-
     const ThemeConfig& Theme() const;
+
+    void SetConfigDir(const std::string&);
+    void SetThemeFilename(const std::string&);
 
 private:
     void ParseTheme(const toml::value& data);
+    void HandleDefaultConfigDir();
     ThemeConfig theme_config_;
+
+    std::string config_dir_;
+    std::string theme_filename_;
+    std::string settings_filename_;
 };
 
 } // namespace derid
