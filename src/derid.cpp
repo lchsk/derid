@@ -15,17 +15,17 @@ int main(int argc, char *argv[]) {
     color_theme.background = ColorPair("background", "ffffff", "000000");
     color_theme.current_path = ColorPair("current_path", "cbff8c", "000000");
 
-    derid::curses curses(color_theme);
+    Curses curses(color_theme);
 
     // 4 empty lines under the list
-    widget::List list(Pos(1, 0), curses.size.row - 5);
+    widget::List list(Pos(1, 0), curses.Size().row - 5);
     widget::Label label(Pos(0, 0), "");
     label.SetColor(COLOR_PAIR(curses.color_pairs_["current_path"]));
     // widget::input input(pos(0, curses.size.get_row() - 3));
 
-    curses.l = &list;
-    curses.label = &label;
+    curses.SetList(&list);
+    curses.SetLabel(&label);
     // curses.input = &input;
 
-    curses.run();
+    curses.Run();
 }

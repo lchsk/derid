@@ -10,57 +10,62 @@
 #include "pos.hpp"
 #include "colors.hpp"
 
+// Change it to a function
 #define DERID_COLOR(color_name) COLOR_PAIR(color_pairs_[color_name])
 
 namespace derid {
-class curses {
+class Curses {
   public:
-    curses(const ColorTheme& color_theme);
-    ~curses();
+    Curses(const ColorTheme& color_theme);
+    ~Curses();
 
+    Curses &SetCol(const int col);
+    Curses &SetRow(const int row);
+    Curses &SetPos(const int row, const int col);
+    Curses &Move();
+    Curses &NextLine();
 
+    Curses &Print(const widget::Label &);
+    Curses &Print(const widget::List &);
+    Curses &Print(const std::string &);
 
-    curses &set_col(const int col);
-    curses &set_row(const int row);
-    curses &set_pos(const int row, const int col);
-    curses &move();
-    curses &next_line();
-
-    curses &print(const widget::Label &);
-    curses &print(const widget::List &);
-    curses &print(const std::string &);
-
-    void reset();
+    void Reset();
 
     // TODO: Move this kind of logic out of here
-    void update_label();
+    void UpdateLabel();
 
-    void run();
-
-    derid::widget::List *l;
-    derid::widget::Label *label;
-    // derid::widget::input *input;
-
-    derid::Pos size;
+    void Run();
 
     // TODO: Hide this
     std::unordered_map<std::string, int> color_pairs_;
 
+    const Pos& Size() const;
+
+    void SetList(widget::List *list);
+    void SetLabel(widget::Label *label);
+
   private:
-    void clean(int row);
-    void clean(const widget::List &);
+    void Clean(int row);
+    void Clean(const widget::List &);
 
     void InitTheme();
 
     template <typename F>
-    bool execute_on_selected_entry(int list_index, int index, F f) const;
+    bool ExecuteOnSelectedEntry(int list_index, int index, F f) const;
 
     template <typename Condition, typename Executor>
-    void execute_on_condition(Condition, Executor) const;
+    void ExecuteOnCondition(Condition, Executor) const;
 
-    bool colors_available;
-    derid::Pos pos;
+    bool colors_available_;
+    Pos pos_;
+    Pos size_;
+
     const ColorTheme& color_theme_;
+
+    // TODO: This stuff should be in its own UI
+    widget::List *list_;
+    widget::Label *label_;
+    // derid::widget::input *input;
 };
 } // namespace derid
 

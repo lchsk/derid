@@ -2,7 +2,7 @@
 
 
 namespace derid {
-    void curses::InitTheme() {
+    void Curses::InitTheme() {
         int color_id = 9;
         int color_pair_id = 1;
 
@@ -21,7 +21,7 @@ namespace derid {
         wbkgd(stdscr, DERID_COLOR("background"));
     }
 
-    curses::curses(const ColorTheme& color_theme) :
+    Curses::Curses(const ColorTheme& color_theme) :
         color_theme_(color_theme)
     {
     initscr();
@@ -34,12 +34,12 @@ namespace derid {
     int row, col;
 
     getmaxyx(stdscr, row, col);
-    size.row = row;
-    size.col = col;
+    size_.row = row;
+    size_.col = col;
 
-    colors_available = has_colors();
+    colors_available_ = has_colors();
 
-    if (colors_available) {
+    if (colors_available_) {
         start_color();
 
         InitTheme();
@@ -54,13 +54,13 @@ namespace derid {
     }
 }
 
-curses::~curses() {
+Curses::~Curses() {
     if (!isendwin()) {
         endwin();
     }
 }
 
-derid::curses &curses::print(const std::string &str) {
+Curses &Curses::Print(const std::string &str) {
     for (char ch : str) {
         addch(ch);
     }
@@ -68,41 +68,41 @@ derid::curses &curses::print(const std::string &str) {
     return *this;
 }
 
-derid::curses &curses::set_col(const int col) {
-    pos.col = col;
+Curses &Curses::SetCol(const int col) {
+    pos_.col = col;
     return *this;
 }
-derid::curses &curses::set_row(const int row) {
-    pos.row = row;
+Curses &Curses::SetRow(const int row) {
+    pos_.row = row;
     return *this;
 }
-derid::curses &curses::set_pos(const int row, const int col) {
-    set_col(col);
-    set_row(row);
+Curses &Curses::SetPos(const int row, const int col) {
+    SetCol(col);
+    SetRow(row);
 
     return *this;
 }
-derid::curses &curses::move() {
-    ::move(pos.row, pos.col);
-
-    return *this;
-}
-
-derid::curses &curses::next_line() {
-    pos.row++;
+Curses &Curses::Move() {
+    ::move(pos_.row, pos_.col);
 
     return *this;
 }
 
-curses &curses::print(const widget::Label &label) {
-    clean(label.Position().row);
+Curses &Curses::NextLine() {
+    pos_.row++;
+
+    return *this;
+}
+
+Curses &Curses::Print(const widget::Label &label) {
+    Clean(label.Position().row);
 
     ::move(label.Position().row, label.Position().col);
 
     if (label.Color() != -1) {
         attron(label.Color());
     }
-    print(label.Text());
+    Print(label.Text());
     if (label.Color() != -1) {
         attroff(label.Color());
     }
@@ -110,16 +110,16 @@ curses &curses::print(const widget::Label &label) {
     return *this;
 }
 
-void curses::clean(const widget::List &list) {
+void Curses::Clean(const widget::List &list) {
     const auto& pos = list.Position();
 
     for (int i = pos.row; i < pos.row + list.ItemsShown(); i++) {
-        clean(i);
+        Clean(i);
     }
 }
 
 template <typename F>
-bool curses::execute_on_selected_entry(int list_index, int index, F f) const {
+bool Curses::ExecuteOnSelectedEntry(int list_index, int index, F f) const {
     if (list_index == index) {
         f();
         return true;
@@ -129,31 +129,31 @@ bool curses::execute_on_selected_entry(int list_index, int index, F f) const {
 }
 
 template <typename Condition, typename Executor>
-void curses::execute_on_condition(Condition condition,
+void Curses::ExecuteOnCondition(Condition condition,
                                   Executor executor) const {
     if (condition())
         executor();
 }
 
-derid::curses &curses::print(const widget::List &l) {
-    pos = l.Position();
-    clean(l);
+Curses &Curses::Print(const widget::List &list) {
+    pos_ = list.Position();
+    Clean(list);
 
-    ::move(pos.row, pos.col);
+    ::move(pos_.row, pos_.col);
 
     const int max_index =
-        std::min(l.Start() + l.ItemsShown(), static_cast<int>(l.GetBuffer().Entries().size()));
+        std::min(list.Start() + list.ItemsShown(), static_cast<int>(list.GetBuffer().Entries().size()));
 
-    for (int i = l.Start(), index = 0; i < max_index; i++, index++) {
-        bool selected = execute_on_selected_entry(
-            l.Index(), index, [&] { attron(DERID_COLOR("selected")); });
+    for (int i = list.Start(), index = 0; i < max_index; i++, index++) {
+        bool selected = ExecuteOnSelectedEntry(
+            list.Index(), index, [&] { attron(DERID_COLOR("selected")); });
 
-        const auto line_map = l.GetBuffer().GetLineData(i);
+        const auto line_map = list.GetBuffer().GetLineData(i);
 
-        const auto &entry = l.GetBuffer().Entries()[i];
+        const auto &entry = list.GetBuffer().Entries()[i];
 
         for (const auto &info_type : line_map) {
-            execute_on_condition(
+            ExecuteOnCondition(
                 [&] {
                     return !selected and info_type.first == "%name" and
                         entry.Type() ==
@@ -162,7 +162,7 @@ derid::curses &curses::print(const widget::List &l) {
 
                 ,
                 [&] { attron(DERID_COLOR("executable")); });
-            execute_on_condition(
+            ExecuteOnCondition(
                 [&] {
                     return !selected and info_type.first == "%name" and
                         entry.Type() ==
@@ -172,9 +172,9 @@ derid::curses &curses::print(const widget::List &l) {
                 ,
                 [&] { attron(DERID_COLOR("directory")); });
 
-            print(info_type.second);
+            Print(info_type.second);
 
-            execute_on_condition(
+            ExecuteOnCondition(
                 [&] {
                     return !selected and info_type.first == "%name" and
                         entry.Type() ==
@@ -183,7 +183,7 @@ derid::curses &curses::print(const widget::List &l) {
 
                 ,
                 [&] { attroff(DERID_COLOR("executable")); });
-            execute_on_condition(
+            ExecuteOnCondition(
                 [&] {
                     return !selected and info_type.first == "%name" and
                         entry.Type() ==
@@ -194,26 +194,26 @@ derid::curses &curses::print(const widget::List &l) {
                 [&] { attroff(DERID_COLOR("directory")); });
         }
 
-        selected = execute_on_selected_entry(l.Index(), index,
+        selected = ExecuteOnSelectedEntry(list.Index(), index,
                                              [&] { attroff(DERID_COLOR("selected")); });
-        next_line().move();
+        NextLine().Move();
     }
 
     return *this;
 }
 
-void curses::reset() {
-    pos.row = 0;
-    pos.col = 0;
-    move();
+void Curses::Reset() {
+    pos_.row = 0;
+    pos_.col = 0;
+    Move();
 }
 
-    void curses::update_label() { label->SetText(l->GetBuffer().Current().string()); }
+    void Curses::UpdateLabel() { label_->SetText(list_->GetBuffer().Current().string()); }
 
-void curses::run() {
-    update_label();
-    print(*l);
-    print(*label);
+void Curses::Run() {
+    UpdateLabel();
+    Print(*list_);
+    Print(*label_);
 
     while (true) {
         const char in = getch();
@@ -221,28 +221,28 @@ void curses::run() {
         if (in == 'q') {
             break;
         } else if (in == 'n') {
-            if (l->Next())
-                print(*l);
+            if (list_->Next())
+                Print(*list_);
         } else if (in == 'p') {
-            if (l->Prev())
-                print(*l);
+            if (list_->Prev())
+                Print(*list_);
         } else if (in == 'g') {
-            l->Refresh(l->GetBuffer().GetAbsolute(l->GetBuffer().GetCurrentPath()));
-            print(*l);
+            list_->Refresh(list_->GetBuffer().GetAbsolute(list_->GetBuffer().GetCurrentPath()));
+            Print(*list_);
         } else if (in == '!') {
 
         } else if (in == 'e') {
-            if (l->Enter()) {
-                update_label();
-                print(*l);
-                print(*label);
+            if (list_->Enter()) {
+                UpdateLabel();
+                Print(*list_);
+                Print(*label_);
             }
 
         } else if (in == 'j') {
-            if (l->JumpBack()) {
-                update_label();
-                print(*l);
-                print(*label);
+            if (list_->JumpBack()) {
+                UpdateLabel();
+                Print(*list_);
+                Print(*label_);
             }
         }
 
@@ -250,9 +250,21 @@ void curses::run() {
     }
 }
 
-void curses::clean(int row) {
+void Curses::Clean(int row) {
     ::move(row, 0);
     clrtoeol();
 }
+
+    const Pos& Curses::Size() const {
+        return size_;
+    }
+
+    void Curses::SetList(widget::List *list) {
+        list_ = list;
+    }
+    void Curses::SetLabel(widget::Label *label) {
+        label_ = label;
+    }
+
 
 } // namespace derid
