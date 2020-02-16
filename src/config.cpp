@@ -19,14 +19,14 @@ namespace derid {
     }
 
     void Config::Read() {
-
-        toml::value data;
+        toml::value settings;
+        toml::value theme;
 
         try {
-            data = toml::parse(config_dir_ + theme_filename_);
+            theme = toml::parse(config_dir_ + theme_filename_);
 
             try {
-                ParseTheme(data);
+                ParseTheme(theme);
             } catch (const std::exception &e) {
                 std::cerr << "Error when reading theme: " << e.what() << std::endl;
             }
@@ -38,10 +38,29 @@ namespace derid {
             std::cerr << "Invalid config file: " << e.what() << std::endl;
         }
 
+        try {
+            settings = toml::parse(config_dir_ + settings_filename_);
+
+            try {
+                ParseSettings(settings);
+            } catch (const std::exception &e) {
+                std::cerr << "Error when reading settings: " << e.what() << std::endl;
+            }
+        }
+        catch (const std::runtime_error& e) {
+            std::cerr << "Cannot open the settings file" << std::endl;
+        }
+        catch (const toml::syntax_error& e) {
+            std::cerr << "Invalid settings file: " << e.what() << std::endl;
+        }
     }
 
     const ThemeConfig& Config::Theme() const {
         return theme_config_;
+    }
+
+    const SettingsConfig& Config::Settings() const {
+        return settings_;
     }
 
     void Config::ParseTheme(const toml::value& data) {
@@ -62,8 +81,12 @@ namespace derid {
         theme_config_.current_path_name = toml::find<std::string>(colors, "current_path_name");
         theme_config_.current_path_fg = toml::find<std::string>(colors, "current_path_fg");
         theme_config_.current_path_bg = toml::find<std::string>(colors, "current_path_bg");
+    }
 
+    void Config::ParseSettings(const toml::value& data) {
+        const auto& main = toml::find(data, "main");
 
+        settings_.theme = toml::find<std::string>(main, "theme");
     }
 
     void Config::HandleDefaultConfigDir() {

@@ -25,7 +25,10 @@ namespace derid {
         std::string current_path_name = "current_path";
         std::string current_path_fg = "cbff8c";
         std::string current_path_bg = "000000";
+    };
 
+    struct SettingsConfig {
+        std::string theme = "default";
     };
 
 class Config {
@@ -33,14 +36,18 @@ public:
     Config();
     void Read();
     const ThemeConfig& Theme() const;
+    const SettingsConfig& Settings() const;
 
     void SetConfigDir(const std::string&);
     void SetThemeFilename(const std::string&);
 
 private:
     void ParseTheme(const toml::value& data);
+    void ParseSettings(const toml::value& data);
     void HandleDefaultConfigDir();
+
     ThemeConfig theme_config_;
+    SettingsConfig settings_;
 
     std::string config_dir_;
     std::string theme_filename_;

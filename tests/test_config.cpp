@@ -4,6 +4,8 @@
 
 using namespace derid;
 
+// Theme
+
 void AssertDefaultThemeValues(const ThemeConfig& theme) {
     ASSERT_EQ(theme.selected_name, "selected");
     ASSERT_EQ(theme.selected_fg, "ffffff");
@@ -85,6 +87,19 @@ TEST(ThemeConfig, read_theme_config_invalid_syntax) {
     config.Read();
 
     AssertDefaultThemeValues(config.Theme());
+}
+
+
+// Settings
+
+TEST(Settings, read_settings_success) {
+    Config config;
+    config.SetConfigDir("../tests/test_data/config/");
+    config.Read();
+
+    const auto& settings = config.Settings();
+
+    ASSERT_EQ(settings.theme, "default");
 }
 
 int main(int argc, char **argv) {
