@@ -5,7 +5,7 @@
 using namespace derid;
 
 void AssertDefaultThemeValues(const ThemeConfig& theme) {
-   ASSERT_EQ(theme.selected_name, "selected");
+    ASSERT_EQ(theme.selected_name, "selected");
     ASSERT_EQ(theme.selected_fg, "ffffff");
     ASSERT_EQ(theme.selected_bg, "3f88c5");
     ASSERT_EQ(theme.executable_name, "executable");
@@ -56,7 +56,17 @@ TEST(ThemeConfig, read_theme_config_missing_keys) {
     config.SetThemeFilename("missing_keys.toml");
     config.Read();
 
-    AssertDefaultThemeValues(config.Theme());
+    const auto& theme = config.Theme();
+
+    // Keys present should be read correctly
+    ASSERT_EQ(theme.selected_name, "test");
+    ASSERT_EQ(theme.selected_fg, "555555");
+    ASSERT_EQ(theme.selected_bg, "111111");
+
+    // Other keys should use default values
+    ASSERT_EQ(theme.executable_name, "executable");
+    ASSERT_EQ(theme.executable_fg, "e3655b");
+    ASSERT_EQ(theme.executable_bg, "000000");
 }
 
 
