@@ -29,11 +29,12 @@ class List {
     const Buffer& GetBuffer() const;
 
 private:
-    const int items_shown_;
-    const int half_items_shown_;
     const Pos pos_;
     int index_;
     int start_;
+    const int items_shown_;
+    const int half_items_shown_;
+
     Buffer buffer_;
 };
 } // namespace widget

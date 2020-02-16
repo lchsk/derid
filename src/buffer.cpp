@@ -161,7 +161,6 @@ void Buffer::ReadDir(const std::string &dir) {
 
     assert(lines.size() == names.size());
 
-    std::size_t date_max = 0;
     std::size_t size_max = 0;
     std::size_t name_max = 0;
     std::size_t owner_max = 0;
