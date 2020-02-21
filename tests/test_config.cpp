@@ -27,7 +27,7 @@ void AssertDefaultThemeValues(const ThemeConfig& theme) {
 
 TEST(ThemeConfig, read_theme_config_success) {
     Config config;
-    config.SetConfigDir("../tests/test_data/config/");
+    config.SetConfigDir("../tests/test_data/.config/derid/");
     config.Read();
 
     const auto& theme = config.Theme();
@@ -52,7 +52,7 @@ TEST(ThemeConfig, read_theme_config_success) {
 
 TEST(ThemeConfig, read_theme_config_missing_keys) {
     Config config;
-    config.SetConfigDir("../tests/test_data/config/");
+    config.SetConfigDir("../tests/test_data/.config/derid/");
 
     // If the file is missing values, it should read default values
     config.SetThemeFilename("missing_keys.toml");
@@ -89,7 +89,6 @@ TEST(ThemeConfig, read_theme_config_invalid_syntax) {
     AssertDefaultThemeValues(config.Theme());
 }
 
-
 // Settings
 
 TEST(Settings, read_settings_success) {
@@ -100,6 +99,30 @@ TEST(Settings, read_settings_success) {
     const auto& settings = config.Settings();
 
     ASSERT_EQ(settings.theme, "default");
+}
+
+TEST(Settings, handle_default_config_dir_without_home_env) {
+    setenv("HOME", "", true);
+
+    Config config;
+
+    ASSERT_EQ(config.GetConfigDir(), "");
+}
+
+TEST(Settings, handle_default_config_dir_with_non_existent_home_dir) {
+    setenv("HOME", "abcdef", true);
+
+    Config config;
+
+    ASSERT_EQ(config.GetConfigDir(), "");
+}
+
+TEST(Settings, handle_default_config_dir_with_home_env) {
+    setenv("HOME", "../tests/test_data", true);
+
+    Config config;
+
+    ASSERT_EQ(config.GetConfigDir(), "../tests/test_data/.config/derid/");
 }
 
 int main(int argc, char **argv) {

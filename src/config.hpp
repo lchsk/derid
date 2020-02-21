@@ -39,9 +39,13 @@ public:
     const SettingsConfig& Settings() const;
 
     void SetConfigDir(const std::string&);
+    const std::string& GetConfigDir() const;
     void SetThemeFilename(const std::string&);
 
+
 private:
+    void ReadTheme();
+    void ReadSettings();
     void ParseTheme(const toml::value& data);
     void ParseSettings(const toml::value& data);
     void HandleDefaultConfigDir();

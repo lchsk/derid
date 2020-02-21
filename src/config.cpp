@@ -1,13 +1,21 @@
 #include <iostream>
 
+#include <boost/filesystem.hpp>
+
 #include "config.hpp"
 
 namespace derid {
+    namespace fs = boost::filesystem;
+
     Config::Config() :
         theme_filename_("theme.toml"),
         settings_filename_("settings.toml")
     {
         HandleDefaultConfigDir();
+    }
+
+    const std::string& Config::GetConfigDir() const {
+        return config_dir_;
     }
 
     void Config::SetConfigDir(const std::string& dir) {
@@ -19,40 +27,8 @@ namespace derid {
     }
 
     void Config::Read() {
-        toml::value settings;
-        toml::value theme;
-
-        try {
-            theme = toml::parse(config_dir_ + theme_filename_);
-
-            try {
-                ParseTheme(theme);
-            } catch (const std::exception &e) {
-                std::cerr << "Error when reading theme: " << e.what() << std::endl;
-            }
-        }
-        catch (const std::runtime_error& e) {
-            std::cerr << "Cannot open the config file" << std::endl;
-        }
-        catch (const toml::syntax_error& e) {
-            std::cerr << "Invalid config file: " << e.what() << std::endl;
-        }
-
-        try {
-            settings = toml::parse(config_dir_ + settings_filename_);
-
-            try {
-                ParseSettings(settings);
-            } catch (const std::exception &e) {
-                std::cerr << "Error when reading settings: " << e.what() << std::endl;
-            }
-        }
-        catch (const std::runtime_error& e) {
-            std::cerr << "Cannot open the settings file" << std::endl;
-        }
-        catch (const toml::syntax_error& e) {
-            std::cerr << "Invalid settings file: " << e.what() << std::endl;
-        }
+        ReadTheme();
+        ReadSettings();
     }
 
     const ThemeConfig& Config::Theme() const {
@@ -89,7 +65,84 @@ namespace derid {
         settings_.theme = toml::find<std::string>(main, "theme");
     }
 
-    void Config::HandleDefaultConfigDir() {
-        // TODO: Implement
+    void Config::ReadTheme() {
+        toml::value theme;
+
+        const std::string full_path = config_dir_ + theme_filename_;
+
+        if (!fs::exists(full_path) || !fs::is_regular_file(full_path)) {
+            return;
+        }
+
+        try {
+            theme = toml::parse(full_path);
+
+            try {
+                ParseTheme(theme);
+            } catch (const std::exception &e) {
+                std::cerr << "Error when reading theme: " << e.what() << std::endl;
+            }
+        }
+        catch (const std::runtime_error& e) {
+            std::cerr << "Cannot open the config file" << std::endl;
+        }
+        catch (const toml::syntax_error& e) {
+            std::cerr << "Invalid config file: " << e.what() << std::endl;
+        }
     }
+
+    void Config::ReadSettings() {
+        toml::value settings;
+
+        const std::string full_path = config_dir_ + settings_filename_;
+
+        if (!fs::exists(full_path) || !fs::is_regular_file(full_path)) {
+            return;
+        }
+
+        try {
+            settings = toml::parse(full_path);
+
+            try {
+                ParseSettings(settings);
+            } catch (const std::exception &e) {
+                std::cerr << "Error when reading settings: " << e.what() << std::endl;
+            }
+        }
+        catch (const std::runtime_error& e) {
+            std::cerr << "Cannot open the settings file" << std::endl;
+        }
+        catch (const toml::syntax_error& e) {
+            std::cerr << "Invalid settings file: " << e.what() << std::endl;
+        }
+    }
+
+    void Config::HandleDefaultConfigDir() {
+        const char* home_env_var = std::getenv("HOME");
+
+        std::cout << "HOME: " << home_env_var << std::endl;
+
+        if (!home_env_var) {
+            return;
+        }
+
+        const std::string home_dir = std::string(home_env_var);
+
+        if (home_dir.size() < 1) {
+            return;
+        }
+
+        std::string separator = "/";
+
+        if (home_dir[home_dir.size() - 1] == '/') {
+            separator = "";
+        }
+
+        const auto config_dir = fs::path(home_dir + separator + ".config/derid/");
+
+        if (fs::exists(config_dir) && fs::is_directory(config_dir)) {
+            config_dir_ = config_dir.string();
+        }
+    }
+
 } // namespace derid

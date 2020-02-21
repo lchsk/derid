@@ -4,17 +4,19 @@
 
 #include "../src/buffer.hpp"
 
+using namespace derid;
+
 TEST(Buffer, readdir) {
-    derid::buffer buffer;
+    Buffer buffer;
 
-    buffer.read_dir("../tests/test_data");
+    buffer.ReadDir("../tests/test_data");
 
-    ASSERT_EQ(buffer.entries.size(), 6);
+    ASSERT_EQ(buffer.Entries().size(), 7);
 
     std::set<std::string> names;
 
-    for (const auto &entry : buffer.entries) {
-        names.insert(entry.name);
+    for (const auto &entry : buffer.Entries()) {
+        names.insert(entry.Name());
     }
 
     ASSERT_EQ(names, std::set<std::string>({
@@ -24,6 +26,7 @@ TEST(Buffer, readdir) {
                          "dir 1 Ś ó a",
                          "dir2",
                          "dir dir 4",
+                         ".config",
                      }));
 }
 
