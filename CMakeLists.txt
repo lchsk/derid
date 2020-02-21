@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
@@ -89,8 +89,32 @@ target_link_libraries(
   -lpthread -ldl
   )
 
-# Tests
+target_precompile_headers(${EXECUTABLE_NAME}
+  PUBLIC
+  <toml.hpp>
+  <ncurses.h>
+    src/config.hpp
+    src/pos.hpp
+    src/colors.hpp
+  PRIVATE
+    <unordered_map>
+    <unordered_set>
+    <vector>
+    <string>
+    <map>
+    <iomanip>
+    <sstream>
+    <iostream>
+    <boost/filesystem.hpp>
+    <boost/algorithm/string.hpp>
+    <boost/algorithm/string/predicate.hpp>
+    <boost/algorithm/string/regex.hpp>
+    <boost/algorithm/string/replace.hpp>
+    <boost/algorithm/string/trim.hpp>
+    <boost/regex.hpp>
+    )
 
+# Tests
 if (GTEST_FOUND)
   if (BUILD_TESTS OR CMAKE_BUILD_TYPE STREQUAL Debug)
     message(STATUS "Building tests")
@@ -109,8 +133,10 @@ if (GTEST_FOUND)
   add_executable(test_colors
     tests/test_colors.cpp
     src/colors.cpp
+    src/config.cpp
     )
   add_test(NAME test_colors COMMAND ./test_colors)
+  target_include_directories(test_colors PRIVATE ${EXTERNAL_LIB_HEADERS})
   target_link_libraries(test_colors ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread -ldl)
 
   # test_config
@@ -121,6 +147,15 @@ if (GTEST_FOUND)
   add_test(NAME test_config COMMAND ./test_config)
   target_include_directories(test_config PRIVATE ${EXTERNAL_LIB_HEADERS})
   target_link_libraries(test_config ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread -ldl)
+
+  add_custom_target(build_tests COMMAND
+    DEPENDS
+    test_readdir test_colors test_config
+    )
+
+  target_precompile_headers(test_config REUSE_FROM ${EXECUTABLE_NAME})
+  target_precompile_headers(test_readdir REUSE_FROM ${EXECUTABLE_NAME})
+  target_precompile_headers(test_colors REUSE_FROM ${EXECUTABLE_NAME})
 
   else ()
   message(STATUS "Not building tests (BUILD_TESTS flag)")

@@ -1,0 +1,20 @@
+[colors]
+selected_name = "selected"
+selected_fg = "123456"
+selected_bg = "abcdef"
+
+executable_name = "executable"
+executable_fg = "123456"
+executable_bg = "abcdef"
+
+directory_name = "directory"
+directory_fg = "123456"
+directory_bg = "abcdef"
+
+background_name = "background"
+background_fg = "123456"
+background_bg = "abcdef"
+
+current_path_name = "current_path"
+current_path_fg = "123456"
+current_path_bg = "abcdef"
