@@ -3,8 +3,8 @@
 
 namespace derid {
     void Curses::InitTheme() {
-        int color_id = 9;
-        int color_pair_id = 1;
+        int color_id = 16;
+        int color_pair_id = 16;
 
         for (const ColorPair& color_pair: color_theme_.GetColors()) {
             init_color(color_id, color_pair.fg_.r, color_pair.fg_.g, color_pair.fg_.b);

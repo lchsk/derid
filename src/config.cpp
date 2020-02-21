@@ -120,8 +120,6 @@ namespace derid {
     void Config::HandleDefaultConfigDir() {
         const char* home_env_var = std::getenv("HOME");
 
-        std::cout << "HOME: " << home_env_var << std::endl;
-
         if (!home_env_var) {
             return;
         }
