@@ -15,30 +15,29 @@ class BufferEntry {
         directory,
     };
 
-    BufferEntry(const std::string &name,
-                 const std::vector<std::string> &parts);
+    BufferEntry(const std::string &name, const std::vector<std::string> &parts);
 
     const BufferEntry::BufferEntryType Type() const;
     const std::string GetFormattedDatetime(const std::string &format) const;
 
-    const std::string& Name() const;
-    const std::string& Size() const;
-    const std::string& Perms() const;
-    const std::string& Owner() const;
-    const std::string& Group() const;
+    const std::string &Name() const;
+    const std::string &Size() const;
+    const std::string &Perms() const;
+    const std::string &Owner() const;
+    const std::string &Group() const;
 
-    const std::string& FmtName() const;
-    void SetFmtName(const std::string& name);
-    const std::string& FmtSize() const;
-    void SetFmtSize(const std::string& size);
-    const std::string& FmtOwner() const;
-    void SetFmtOwner(const std::string& owner);
-    const std::string& FmtGroup() const;
-    void SetFmtGroup(const std::string& group);
+    const std::string &FmtName() const;
+    void SetFmtName(const std::string &name);
+    const std::string &FmtSize() const;
+    void SetFmtSize(const std::string &size);
+    const std::string &FmtOwner() const;
+    void SetFmtOwner(const std::string &owner);
+    const std::string &FmtGroup() const;
+    void SetFmtGroup(const std::string &group);
 
-    const std::string& FmtDatetime() const;
+    const std::string &FmtDatetime() const;
 
-private:
+  private:
     enum class InformationType : unsigned int {
         perms = 0,
         owner = 2,
@@ -74,7 +73,6 @@ private:
     std::string fmt_group_;
     std::string fmt_size_;
     std::string fmt_datetime_;
-
 };
 } // namespace derid
 

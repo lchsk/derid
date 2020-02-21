@@ -63,22 +63,22 @@ std::string Buffer::GetAbsolute(int index) {
 }
 
 // const std::string Buffer::GetLine(int index) const {
-    // const auto &entry = entries_[index];
+// const auto &entry = entries_[index];
 
-    // std::string line = format;
+// std::string line = format;
 
-    // boost::replace_all(line, "%name", entry.FmtName());
-    // boost::replace_all(line, "%perms", entry.Perms());
-    // boost::replace_all(line, "%owner", entry.FmtOwner());
-    // boost::replace_all(line, "%group", entry.FmtGroup());
-    // boost::replace_all(line, "%size", entry.FmtSize());
-    // boost::replace_all(line, "%year", entry.year);
-    // boost::replace_all(line, "%month", entry.month);
-    // boost::replace_all(line, "%day", entry.fmt_day);
-    // boost::replace_all(line, "%datetime", entry.FmtDatetime());
-    // boost::replace_all(line, "%time", entry.time);
+// boost::replace_all(line, "%name", entry.FmtName());
+// boost::replace_all(line, "%perms", entry.Perms());
+// boost::replace_all(line, "%owner", entry.FmtOwner());
+// boost::replace_all(line, "%group", entry.FmtGroup());
+// boost::replace_all(line, "%size", entry.FmtSize());
+// boost::replace_all(line, "%year", entry.year);
+// boost::replace_all(line, "%month", entry.month);
+// boost::replace_all(line, "%day", entry.fmt_day);
+// boost::replace_all(line, "%datetime", entry.FmtDatetime());
+// boost::replace_all(line, "%time", entry.time);
 
-    // return line;
+// return line;
 // }
 
 const std::vector<std::pair<std::string, std::string>>
@@ -215,12 +215,8 @@ void Buffer::ReadDir(const std::string &dir) {
         entry.SetFmtGroup(ss_group.str());
     }
 }
-    const fs::path& Buffer::Current() const {
-        return current_;
-    }
+const fs::path &Buffer::Current() const { return current_; }
 
-    const std::vector<BufferEntry>& Buffer::Entries() const {
-        return entries_;
-    }
+const std::vector<BufferEntry> &Buffer::Entries() const { return entries_; }
 
 } // namespace derid

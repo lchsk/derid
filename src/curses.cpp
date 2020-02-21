@@ -1,29 +1,28 @@
 #include "curses.hpp"
 
-
 namespace derid {
-    void Curses::InitTheme() {
-        int color_id = 16;
-        int color_pair_id = 16;
+void Curses::InitTheme() {
+    int color_id = 16;
+    int color_pair_id = 16;
 
-        for (const ColorPair& color_pair: color_theme_.GetColors()) {
-            init_color(color_id, color_pair.fg_.r, color_pair.fg_.g, color_pair.fg_.b);
-            color_id++;
-            init_color(color_id, color_pair.bg_.r, color_pair.bg_.g, color_pair.bg_.b);
-            color_id++;
+    for (const ColorPair &color_pair : color_theme_.GetColors()) {
+        init_color(color_id, color_pair.fg_.r, color_pair.fg_.g,
+                   color_pair.fg_.b);
+        color_id++;
+        init_color(color_id, color_pair.bg_.r, color_pair.bg_.g,
+                   color_pair.bg_.b);
+        color_id++;
 
-            init_pair(color_pair_id, color_id - 2, color_id - 1);
-            color_pairs_[color_pair.name_] = color_pair_id;
+        init_pair(color_pair_id, color_id - 2, color_id - 1);
+        color_pairs_[color_pair.name_] = color_pair_id;
 
-            color_pair_id++;
-        }
-
-        wbkgd(stdscr, DERID_COLOR("background"));
+        color_pair_id++;
     }
 
-    Curses::Curses(const ColorTheme& color_theme) :
-        color_theme_(color_theme)
-    {
+    wbkgd(stdscr, DERID_COLOR("background"));
+}
+
+Curses::Curses(const ColorTheme &color_theme) : color_theme_(color_theme) {
     initscr();
     raw();
     noecho();
@@ -111,7 +110,7 @@ Curses &Curses::Print(const widget::Label &label) {
 }
 
 void Curses::Clean(const widget::List &list) {
-    const auto& pos = list.Position();
+    const auto &pos = list.Position();
 
     for (int i = pos.row; i < pos.row + list.ItemsShown(); i++) {
         Clean(i);
@@ -129,8 +128,7 @@ bool Curses::ExecuteOnSelectedEntry(int list_index, int index, F f) const {
 }
 
 template <typename Condition, typename Executor>
-void Curses::ExecuteOnCondition(Condition condition,
-                                  Executor executor) const {
+void Curses::ExecuteOnCondition(Condition condition, Executor executor) const {
     if (condition())
         executor();
 }
@@ -142,7 +140,8 @@ Curses &Curses::Print(const widget::List &list) {
     move(pos_.row, pos_.col);
 
     const int max_index =
-        std::min(list.Start() + list.ItemsShown(), static_cast<int>(list.GetBuffer().Entries().size()));
+        std::min(list.Start() + list.ItemsShown(),
+                 static_cast<int>(list.GetBuffer().Entries().size()));
 
     for (int i = list.Start(), index = 0; i < max_index; i++, index++) {
         bool selected = ExecuteOnSelectedEntry(
@@ -156,8 +155,8 @@ Curses &Curses::Print(const widget::List &list) {
             ExecuteOnCondition(
                 [&] {
                     return !selected and info_type.first == "%name" and
-                        entry.Type() ==
-                        BufferEntry::BufferEntryType::executable;
+                           entry.Type() ==
+                               BufferEntry::BufferEntryType::executable;
                 }
 
                 ,
@@ -165,8 +164,8 @@ Curses &Curses::Print(const widget::List &list) {
             ExecuteOnCondition(
                 [&] {
                     return !selected and info_type.first == "%name" and
-                        entry.Type() ==
-                        BufferEntry::BufferEntryType::directory;
+                           entry.Type() ==
+                               BufferEntry::BufferEntryType::directory;
                 }
 
                 ,
@@ -177,8 +176,8 @@ Curses &Curses::Print(const widget::List &list) {
             ExecuteOnCondition(
                 [&] {
                     return !selected and info_type.first == "%name" and
-                        entry.Type() ==
-                        BufferEntry::BufferEntryType::executable;
+                           entry.Type() ==
+                               BufferEntry::BufferEntryType::executable;
                 }
 
                 ,
@@ -186,16 +185,16 @@ Curses &Curses::Print(const widget::List &list) {
             ExecuteOnCondition(
                 [&] {
                     return !selected and info_type.first == "%name" and
-                        entry.Type() ==
-                        BufferEntry::BufferEntryType::directory;
+                           entry.Type() ==
+                               BufferEntry::BufferEntryType::directory;
                 }
 
                 ,
                 [&] { attroff(DERID_COLOR("directory")); });
         }
 
-        selected = ExecuteOnSelectedEntry(list.Index(), index,
-                                             [&] { attroff(DERID_COLOR("selected")); });
+        selected = ExecuteOnSelectedEntry(
+            list.Index(), index, [&] { attroff(DERID_COLOR("selected")); });
         NextLine().Move();
     }
 
@@ -208,7 +207,9 @@ void Curses::Reset() {
     Move();
 }
 
-    void Curses::UpdateLabel() { label_->SetText(list_->GetBuffer().Current().string()); }
+void Curses::UpdateLabel() {
+    label_->SetText(list_->GetBuffer().Current().string());
+}
 
 void Curses::Run() {
     UpdateLabel();
@@ -227,7 +228,8 @@ void Curses::Run() {
             if (list_->Prev())
                 Print(*list_);
         } else if (in == 'g') {
-            list_->Refresh(list_->GetBuffer().GetAbsolute(list_->GetBuffer().GetCurrentPath()));
+            list_->Refresh(list_->GetBuffer().GetAbsolute(
+                list_->GetBuffer().GetCurrentPath()));
             Print(*list_);
         } else if (in == '!') {
 
@@ -255,16 +257,9 @@ void Curses::Clean(int row) {
     clrtoeol();
 }
 
-    const Pos& Curses::Size() const {
-        return size_;
-    }
+const Pos &Curses::Size() const { return size_; }
 
-    void Curses::SetList(widget::List *list) {
-        list_ = list;
-    }
-    void Curses::SetLabel(widget::Label *label) {
-        label_ = label;
-    }
-
+void Curses::SetList(widget::List *list) { list_ = list; }
+void Curses::SetLabel(widget::Label *label) { label_ = label; }
 
 } // namespace derid

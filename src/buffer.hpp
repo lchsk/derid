@@ -31,8 +31,8 @@ class Buffer {
     const std::vector<std::pair<std::string, std::string>>
     GetLineData(int index) const;
 
-    const fs::path& Current() const;
-    const std::vector<BufferEntry>& Entries() const;
+    const fs::path &Current() const;
+    const std::vector<BufferEntry> &Entries() const;
 
   private:
     // const std::string GetLine(int index) const;

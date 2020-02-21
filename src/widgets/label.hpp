@@ -13,26 +13,25 @@ class Label {
   public:
     Label(const Pos &p, const std::string &text);
 
-    const Pos& Position() const;
-    const std::string& Text() const;
-    void SetText(const std::string&);
+    const Pos &Position() const;
+    const std::string &Text() const;
+    void SetText(const std::string &);
     int Color() const;
     void SetColor(int);
 
-private:
+  private:
     const Pos pos_;
     std::string text_;
     int color_;
 };
 
-    // class input {
-    // public:
-        // input(const derid::pos&p) : pos(p) {}
+// class input {
+// public:
+// input(const derid::pos&p) : pos(p) {}
 
-
-        // derid::pos pos;
-        // std::string text;
-    // };
+// derid::pos pos;
+// std::string text;
+// };
 
 } // namespace widget
 } // namespace derid

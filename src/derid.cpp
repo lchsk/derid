@@ -1,10 +1,10 @@
 #include "buffer.hpp"
-#include "curses.hpp"
-#include "widgets/label.hpp"
-#include "widgets/list.hpp"
-#include "pos.hpp"
 #include "colors.hpp"
 #include "config.hpp"
+#include "curses.hpp"
+#include "pos.hpp"
+#include "widgets/label.hpp"
+#include "widgets/list.hpp"
 
 using namespace derid;
 

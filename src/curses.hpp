@@ -5,10 +5,10 @@
 #include <string>
 #include <unordered_map>
 
+#include "colors.hpp"
+#include "pos.hpp"
 #include "widgets/label.hpp"
 #include "widgets/list.hpp"
-#include "pos.hpp"
-#include "colors.hpp"
 
 // Change it to a function
 #define DERID_COLOR(color_name) COLOR_PAIR(color_pairs_[color_name])
@@ -16,7 +16,7 @@
 namespace derid {
 class Curses {
   public:
-    Curses(const ColorTheme& color_theme);
+    Curses(const ColorTheme &color_theme);
     ~Curses();
 
     Curses &SetCol(const int col);
@@ -39,7 +39,7 @@ class Curses {
     // TODO: Hide this
     std::unordered_map<std::string, int> color_pairs_;
 
-    const Pos& Size() const;
+    const Pos &Size() const;
 
     void SetList(widget::List *list);
     void SetLabel(widget::Label *label);
@@ -60,7 +60,7 @@ class Curses {
     Pos pos_;
     Pos size_;
 
-    const ColorTheme& color_theme_;
+    const ColorTheme &color_theme_;
 
     // TODO: This stuff should be in its own UI
     widget::List *list_;

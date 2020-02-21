@@ -87,24 +87,14 @@ bool List::JumpBack() {
     return true;
 }
 
-    int List::ItemsShown() const {
-        return items_shown_;
-    }
+int List::ItemsShown() const { return items_shown_; }
 
-    const Pos& List::Position() const {
-        return pos_;
-    }
+const Pos &List::Position() const { return pos_; }
 
-    int List::Index() const {
-        return index_;
-    }
-    int List::Start() const {
-        return start_;
-    }
+int List::Index() const { return index_; }
+int List::Start() const { return start_; }
 
-    const Buffer& List::GetBuffer() const {
-        return buffer_;
-    }
+const Buffer &List::GetBuffer() const { return buffer_; }
 
 } // namespace widget
 } // namespace derid

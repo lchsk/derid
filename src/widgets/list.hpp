@@ -23,12 +23,12 @@ class List {
     bool JumpBack();
 
     int ItemsShown() const;
-    const Pos& Position() const;
+    const Pos &Position() const;
     int Index() const;
     int Start() const;
-    const Buffer& GetBuffer() const;
+    const Buffer &GetBuffer() const;
 
-private:
+  private:
     const Pos pos_;
     int index_;
     int start_;
