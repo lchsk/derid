@@ -61,6 +61,7 @@ set(EXTERNAL_LIB_HEADERS lib/toml11)
 
 add_executable(${EXECUTABLE_NAME}
     src/config.cpp
+    src/files.cpp
     src/colors.cpp
     src/derid.cpp
     src/pos.cpp

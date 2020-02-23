@@ -1,5 +1,7 @@
 #include "list.hpp"
 
+#include "../files.hpp"
+
 namespace derid {
 namespace widget {
 
@@ -71,7 +73,8 @@ bool List::Enter() {
     }
 
     if (buffer_.IsFile(np)) {
-        return false;
+        Open(np.string());
+        return true;
     }
 
     const auto abs = buffer_.GetAbsolute(np);
