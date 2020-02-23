@@ -31,6 +31,8 @@ struct SettingsConfig {
     std::string theme = "default";
 };
 
+const std::string GetHomeDir();
+
 class Config {
   public:
     Config();

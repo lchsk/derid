@@ -7,6 +7,22 @@
 namespace derid {
 namespace fs = boost::filesystem;
 
+const std::string GetHomeDir() {
+    const char *home_env_var = std::getenv("HOME");
+
+    if (!home_env_var) {
+        return "";
+    }
+
+    const std::string home_dir = std::string(home_env_var);
+
+    if (home_dir.size() < 1) {
+        return "";
+    }
+
+    return home_dir;
+}
+
 Config::Config()
     : theme_filename_("theme.toml"), settings_filename_("settings.toml") {
     HandleDefaultConfigDir();
@@ -118,13 +134,7 @@ void Config::ReadSettings() {
 }
 
 void Config::HandleDefaultConfigDir() {
-    const char *home_env_var = std::getenv("HOME");
-
-    if (!home_env_var) {
-        return;
-    }
-
-    const std::string home_dir = std::string(home_env_var);
+    const std::string home_dir = GetHomeDir();
 
     if (home_dir.size() < 1) {
         return;

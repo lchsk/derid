@@ -122,6 +122,14 @@ TEST(Settings, handle_default_config_dir_with_home_env) {
     ASSERT_EQ(config.GetConfigDir(), "../tests/test_data/.config/derid/");
 }
 
+TEST(Settings, get_home_dir) {
+    setenv("HOME", "whatever", true);
+
+    auto home_dir = GetHomeDir();
+
+    ASSERT_EQ(home_dir, "whatever");
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
