@@ -14,6 +14,27 @@
 #define DERID_COLOR(color_name) COLOR_PAIR(color_pairs_[color_name])
 
 namespace derid {
+class Input {
+  public:
+    enum class InputAction {
+        None,
+        Quit,
+        Next,
+        Prev,
+        Refresh,
+        Enter,
+        Jump,
+    };
+
+    void Read();
+    const InputAction GetAction() const;
+
+  private:
+    InputAction action_;
+
+    const static int KEY_ESC_OR_ALT = 27;
+};
+
 class Curses {
   public:
     Curses(const ColorTheme &color_theme);
@@ -62,6 +83,8 @@ class Curses {
     Pos size_;
 
     const ColorTheme &color_theme_;
+
+    Input input_;
 
     // TODO: This stuff should be in its own UI
     widget::List *list_;

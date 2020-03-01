@@ -212,30 +212,34 @@ void Curses::Run() {
     Print(*label_);
 
     while (true) {
-        const char in = getch();
+        input_.Read();
+        const auto action = input_.GetAction();
 
-        if (in == 'q') {
+        if (action == Input::InputAction::Quit) {
             break;
-        } else if (in == 'n') {
+        }
+
+        else if (action == Input::InputAction::Next) {
             if (list_->Next())
                 Print(*list_);
-        } else if (in == 'p') {
+        }
+
+        else if (action == Input::InputAction::Prev) {
             if (list_->Prev())
                 Print(*list_);
-        } else if (in == 'g') {
+        } else if (action == Input::InputAction::Refresh) {
             list_->Refresh(list_->GetBuffer().GetAbsolute(
                 list_->GetBuffer().GetCurrentPath()));
             Print(*list_);
-        } else if (in == '!') {
-
-        } else if (in == 'e') {
+        } else if (action == Input::InputAction::Enter) {
             if (list_->Enter()) {
                 UpdateLabel();
                 Print(*list_);
                 Print(*label_);
             }
+        }
 
-        } else if (in == 'j') {
+        else if (action == Input::InputAction::Jump) {
             if (list_->JumpBack()) {
                 UpdateLabel();
                 Print(*list_);
@@ -343,5 +347,35 @@ void Curses::InitTerminal() {
     // 2 	Terminal-specific high visibility mode
     curs_set(0);
 }
+
+void Input::Read() {
+    action_ = Input::InputAction::None;
+
+    const char in = getch();
+
+    if (in == 'q') {
+        action_ = Input::InputAction::Quit;
+    } else if (in == Input::KEY_ESC_OR_ALT) {
+        const char in_2 = getch();
+
+        if (in_2 == -1) {
+            action_ = Input::InputAction::Quit;
+        }
+    }
+
+    else if (in == 'n') {
+        action_ = Input::InputAction::Next;
+    } else if (in == 'p') {
+        action_ = Input::InputAction::Prev;
+    } else if (in == 'g') {
+        action_ = Input::InputAction::Refresh;
+    } else if (in == 'e') {
+        action_ = Input::InputAction::Enter;
+    } else if (in == 'j') {
+        action_ = Input::InputAction::Jump;
+    }
+}
+
+const Input::InputAction Input::GetAction() const { return action_; }
 
 } // namespace derid
