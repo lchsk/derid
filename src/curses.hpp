@@ -45,6 +45,7 @@ class Curses {
     void SetLabel(widget::Label *label);
 
   private:
+    void InitTerminal();
     void Clean(int row);
     void Clean(const widget::List &);
 

@@ -23,12 +23,7 @@ void Curses::InitTheme() {
 }
 
 Curses::Curses(const ColorTheme &color_theme) : color_theme_(color_theme) {
-    initscr();
-    raw();
-    noecho();
-    keypad(stdscr, 1);
-
-    curs_set(0);
+    InitTerminal();
 
     int row, col;
 
@@ -261,5 +256,92 @@ const Pos &Curses::Size() const { return size_; }
 
 void Curses::SetList(widget::List *list) { list_ = list; }
 void Curses::SetLabel(widget::Label *label) { label_ = label; }
+
+void Curses::InitTerminal() {
+    initscr();
+
+    // No echoing. If you have called noecho(), the character ch will not be
+    // printed on the screen, otherwise it will.
+    // Disabling automatic echoing gives you more control over the user
+    // interface.
+    noecho();
+
+    // No buffering. If you have called cbreak(void) each key the user hits is
+    // returned immediately by getch().
+    // Otherwise the keys hit by the user are queued until a newline is read.
+    // Then calls to getch() take characters from the queue in FIFO manner
+    // until the queue is empty and the next whole line is read.
+    cbreak();
+
+    // The cbreak() function sets the input mode for the current terminal
+    // to cbreak mode and overrides a call to raw().
+
+    // The nocbreak() function sets the input mode for the current terminal to
+    // Cooked Mode without changing the state of ISIG and IXON.
+
+    // The noraw() function sets the input mode for the current
+    // terminal to Cooked Mode and sets the ISIG and IXON flags.
+
+    // The raw() function sets the input mode for the current
+    // terminal to Raw Mode.
+    // raw();
+
+    // Special keys. If you have called keypad(stdstr, TRUE), then if the user
+    // hits a special key such as the Delete key, the arrow keys, Ctrl
+    // combined keys and function keys, a single int value will be returned.
+    // Here is the definition of several special keys
+    // key code        description
+
+    // KEY_DOWN        The four arrow keys ...
+    // KEY_UP
+    // KEY_LEFT
+    // KEY_RIGHT
+    // KEY_HOME        Home key
+    // KEY_BACKSPACE   Backspace
+    // KEY_F(n)        Function keys, for 0 <= n >= 63
+    // KEY_DC          Delete character
+    // KEY_IC          Insert char or enter insert mode
+    // KEY_ENTER       Enter or send
+    // keypad(stdscr, 1);
+
+    // control blocking on input
+    // delay < 0
+    // One or more blocking reads (indefinite waits for input) are used.
+    // delay = 0
+    // One or more non-blocking reads are used. Any Curses input function
+    // will fail if every character of the requested string is not
+    // immediately available.
+    // delay > 0
+    // Any Curses input function blocks for delay milliseconds
+    // and fails if there is still no input.
+    timeout(0);
+
+    // The nodelay() function specifies whether Delay Mode or No Delay Mode
+    // is in effect for the screen associated with the specified window.
+    // If bf is TRUE, this screen is set to No Delay Mode.
+    // If bf is FALSE, this screen is set to Delay Mode.
+    // The initial state is FALSE.
+    // nodelay(stdscr, true);
+
+    // The notimeout() function controls whether or not getch() will wait
+    // indefinitely between characters in a multi-character key sequence or not.
+    // If flag is TRUE, then there is no timeout applied between characters
+    // comprising a multi-character key sequence.  If flag is FALSE, then the
+    // component characters of a multi-character sequence must not have an
+    // inter-character gap of more than ESCDELAY.  If this timing is exceeded,
+    // then the multi-character key assembly is deemed to have failed and the
+    // characters read thus far are returned one at a time when getch() is
+    // called.  The default setting for the flag is FALSE.  The default value of
+    // ESCDELAY is 300ms.  If ESCDELAY is negative, no timeout is applied
+    // between characters comprising a multi-character key sequence.
+    // set_escdelay(0);
+
+    // The curs_set() function sets the appearance of the cursor
+    // based on the value of visibility:
+    // 0 	Invisible
+    // 1 	Terminal-specific normal mode
+    // 2 	Terminal-specific high visibility mode
+    curs_set(0);
+}
 
 } // namespace derid
