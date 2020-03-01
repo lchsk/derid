@@ -2,6 +2,8 @@
 #define CURSES_HPP
 
 #include <ncurses.h>
+#include <signal.h>
+
 #include <string>
 #include <unordered_map>
 
@@ -68,12 +70,17 @@ class Curses {
     void SetList(widget::List *list);
     void SetLabel(widget::Label *label);
 
+    void ResizeTermHandler();
+
+    static Curses *signal_object;
+
   private:
     void InitTerminal();
     void Clean(int row);
     void Clean(const widget::List &);
 
     void InitTheme();
+    void ReadTermSize();
 
     template <typename F>
     bool ExecuteOnSelectedEntry(int list_index, int index, F f) const;

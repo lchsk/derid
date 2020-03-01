@@ -1,6 +1,9 @@
 #include "curses.hpp"
 
 namespace derid {
+
+extern "C" void SignalHandler(int signum);
+
 void Curses::InitTheme() {
     int color_id = 16;
     int color_pair_id = 16;
@@ -25,11 +28,7 @@ void Curses::InitTheme() {
 Curses::Curses(const ColorTheme &color_theme) : color_theme_(color_theme) {
     InitTerminal();
 
-    int row, col;
-
-    getmaxyx(stdscr, row, col);
-    size_.row = row;
-    size_.col = col;
+    ReadTermSize();
 
     colors_available_ = has_colors();
 
@@ -346,6 +345,8 @@ void Curses::InitTerminal() {
     // 1 	Terminal-specific normal mode
     // 2 	Terminal-specific high visibility mode
     curs_set(0);
+
+    signal(SIGWINCH, SignalHandler);
 }
 
 void Input::Read() {
@@ -387,6 +388,33 @@ void Input::Read() {
     }
 }
 
+void Curses::ReadTermSize() {
+    int row, col;
+
+    getmaxyx(stdscr, row, col);
+
+    size_.row = row;
+    size_.col = col;
+}
+
+void Curses::ResizeTermHandler() {
+    ReadTermSize();
+
+    refresh();
+}
+
 const Input::InputAction Input::GetAction() const { return action_; }
+
+extern "C" void SignalHandler(int signum) {
+    if (Curses::signal_object == nullptr) {
+        return;
+    }
+
+    if (signum == SIGWINCH) {
+        Curses::signal_object->ResizeTermHandler();
+    }
+}
+
+Curses *Curses::signal_object = nullptr;
 
 } // namespace derid

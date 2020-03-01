@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
     color_theme.ReadFromConfig(config);
 
     Curses curses(color_theme);
+    Curses::signal_object = &curses;
 
     // 4 empty lines under the list
     widget::List list(Pos(1, 0), curses.Size().row - 5);
