@@ -32,7 +32,10 @@ class Input {
   private:
     InputAction action_;
 
-    const static int KEY_ESC_OR_ALT = 27;
+    const static int K_ESC_OR_ALT = 27;
+    const static int K_ENTER = 10;
+    const static int K_ARROW_UP = 65;
+    const static int K_ARROW_DOWN = 66;
 };
 
 class Curses {

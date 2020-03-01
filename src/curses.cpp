@@ -306,7 +306,7 @@ void Curses::InitTerminal() {
     // KEY_DC          Delete character
     // KEY_IC          Insert char or enter insert mode
     // KEY_ENTER       Enter or send
-    // keypad(stdscr, 1);
+    // keypad(stdscr, TRUE);
 
     // control blocking on input
     // delay < 0
@@ -355,8 +355,19 @@ void Input::Read() {
 
     if (in == 'q') {
         action_ = Input::InputAction::Quit;
-    } else if (in == Input::KEY_ESC_OR_ALT) {
+    } else if (in == Input::K_ESC_OR_ALT) {
         const char in_2 = getch();
+
+        if (in_2 == '[') {
+            // Arrow keys
+            const char in_3 = getch();
+
+            if (in_3 == Input::K_ARROW_UP) {
+                action_ = Input::InputAction::Prev;
+            } else if (in_3 == Input::K_ARROW_DOWN) {
+                action_ = Input::InputAction::Next;
+            }
+        }
 
         if (in_2 == -1) {
             action_ = Input::InputAction::Quit;
@@ -369,7 +380,7 @@ void Input::Read() {
         action_ = Input::InputAction::Prev;
     } else if (in == 'g') {
         action_ = Input::InputAction::Refresh;
-    } else if (in == 'e') {
+    } else if (in == 'e' || in == Input::K_ENTER) {
         action_ = Input::InputAction::Enter;
     } else if (in == 'j') {
         action_ = Input::InputAction::Jump;
