@@ -191,6 +191,14 @@ void Buffer::ReadDir(const std::string &dir) {
         if (entry.Name().size() > name_max) {
             name_max = entry.Name().size();
         }
+
+        if (entry.Owner().size() > owner_max) {
+            owner_max = entry.Owner().size();
+        }
+
+        if (entry.Group().size() > group_max) {
+            group_max = entry.Group().size();
+        }
     }
 
     for (auto &entry : entries_) {
